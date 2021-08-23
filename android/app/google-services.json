@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "458115879460",
+    "project_id": "tassie-9ee59",
+    "storage_bucket": "tassie-9ee59.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:458115879460:android:2cbe0f4605ca78c0ef3eb1",
+        "android_client_info": {
+          "package_name": "com.designike.tassie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "458115879460-ecf10094e7t11an9g6biieuee6o23qd0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmE7sIY9n7gWNj4gZnLV6bd90xm2PsVlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "458115879460-ecf10094e7t11an9g6biieuee6o23qd0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
