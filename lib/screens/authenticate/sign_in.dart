@@ -81,19 +81,6 @@ class _SignInState extends State<SignIn> {
                     primary: Colors.grey[850],
                   ),
                 ),
-                SizedBox(height: 20.0),
-                ElevatedButton(
-                  child: Text('Guest Login'),
-                  onPressed: () async {
-                    dynamic result = await _auth.signInAnon();
-                    if (result == null) {
-                      print('error signing in');
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.grey[850],
-                  ),
-                ),
                 SizedBox(height: 12.0),
                 Text(
                   error,

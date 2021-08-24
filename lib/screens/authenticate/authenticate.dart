@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tassie/screens/authenticate/register%20copy.dart';
 import 'package:tassie/screens/authenticate/register.dart';
+import 'package:tassie/screens/authenticate/sign_in%20copy.dart';
 import 'package:tassie/screens/authenticate/sign_in.dart';
 
 class Authenticate extends StatefulWidget {
@@ -20,9 +22,9 @@ class _AuthenticateState extends State<Authenticate> {
   @override
   Widget build(BuildContext context) {
     if (showSignIn) {
-      return SignIn(func: toggle);
+      return SignInC(func: toggle);
     } else {
-      return Register(func: toggle);
+      return RegisterC(func: toggle);
     }
   }
 }
