@@ -4,6 +4,7 @@ import 'package:tassie/utilities/database.dart';
 
 class AuthUtil {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  
   EndUser _userFromFirebaseUser(User? user) {
     return EndUser(uid: user?.uid);
   }
