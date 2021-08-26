@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tassie/utilities/auth.dart';
 
+import '../../constants.dart';
+
 class SignInC extends StatefulWidget {
   final Function? func;
   SignInC({this.func});
@@ -71,7 +73,7 @@ class _SignInCState extends State<SignInC> {
                         fontSize: 12.0,
                         color: Colors.grey.withOpacity(0.5)),
                     focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.amber))),
+                        borderSide: BorderSide(color: kPrimaryColor))),
                 onChanged: (value) {
                   email = value;
                 },
@@ -92,7 +94,7 @@ class _SignInCState extends State<SignInC> {
                         fontSize: 12.0,
                         color: Colors.grey.withOpacity(0.5)),
                     focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.amber))),
+                        borderSide: BorderSide(color: kPrimaryColor))),
                 obscureText: true,
                 onChanged: (value) {
                   password = value;
@@ -118,8 +120,8 @@ class _SignInCState extends State<SignInC> {
                   height: 50.0,
                   child: Material(
                     borderRadius: BorderRadius.circular(25.0),
-                    shadowColor: Colors.amberAccent,
-                    color: Colors.amber,
+                    shadowColor: kPrimaryColorAccent,
+                    color: kPrimaryColor,
                     elevation: 5.0,
                     child: Center(
                       child: Text(
@@ -169,14 +171,14 @@ class _SignInCState extends State<SignInC> {
               ),
               SizedBox(height: 20.0),
               Center(
-                  child: Text(
-                    error,
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 14.0,
-                    ),
+                child: Text(
+                  error,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 14.0,
                   ),
                 ),
+              ),
             ],
           ),
         ),

@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:tassie/models/enduser.dart';
 import 'package:tassie/utilities/database.dart';
 
+import '../main.dart';
+
 class AuthUtil {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  
+
   EndUser _userFromFirebaseUser(User? user) {
     return EndUser(uid: user?.uid);
   }
