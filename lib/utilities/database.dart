@@ -17,6 +17,9 @@ class DatabaseUtil {
 
   Future addNewRecipe(
       String recipeName, List<String?> ingredients, List<String?> steps) async {
+    await databaseReference.collection("allRecipe").doc(uid).set({
+      "recipeName": recipeName,
+    });
     return await databaseReference
         .collection("recipeCollection")
         .doc(uid)

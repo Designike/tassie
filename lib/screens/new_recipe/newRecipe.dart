@@ -1,9 +1,15 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tassie/models/enduser.dart';
+import 'package:tassie/screens/home/home%20copy.dart';
 import 'package:tassie/screens/home/home.dart';
+import 'package:tassie/screens/wrapper.dart';
 import 'package:tassie/utilities/auth.dart';
 import 'package:tassie/utilities/database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class NewRecipe extends StatefulWidget {
   late final EndUser? user;
@@ -16,6 +22,7 @@ class NewRecipe extends StatefulWidget {
 class _NewRecipeState extends State<NewRecipe> {
   late final EndUser? user;
   late final String? name;
+  late String imageUrl = "";
   _NewRecipeState({this.user, this.name});
 
   List<Widget> _getRecipe() {
@@ -110,6 +117,39 @@ class _NewRecipeState extends State<NewRecipe> {
 
   /// add / remove button
 
+  Future uploadImage() async {
+    final _firebaseStorage = FirebaseStorage.instance;
+    final _imagePicker = ImagePicker();
+    // File image;
+    //Check Permissions
+    await Permission.photos.request();
+
+    var permissionStatus = await Permission.photos.status;
+
+    if (permissionStatus.isGranted) {
+      //Select Image
+      var image = (await _imagePicker.pickImage(source: ImageSource.gallery))!;
+      var file = File(image.path);
+
+      // ignore: unnecessary_null_comparison
+      if (image != null) {
+        //Upload to Firebase
+        var snapshot = await _firebaseStorage
+            .ref()
+            .child('images/${user!.uid}/$recipeName')
+            .putFile(file);
+        var downloadUrl = await snapshot.ref.getDownloadURL();
+        setState(() {
+          imageUrl = downloadUrl;
+        });
+      } else {
+        print('No Image Path Received');
+      }
+    } else {
+      print('Permission not granted. Try Again with permission access');
+    }
+  }
+
   Future<void> setList(EndUser? user, String? name) async {
     if (name!.length == 0) {
       stepsList = [null];
@@ -125,7 +165,13 @@ class _NewRecipeState extends State<NewRecipe> {
         stepsList = new List<String>.from(doc["steps"]);
         ingredientsList = new List<String>.from(doc["ingredients"]);
       });
-      setState(() {});
+      final ref =
+          FirebaseStorage.instance.ref().child('images/${user!.uid}/$name');
+      print(ref);
+      var url = await ref.getDownloadURL();
+      setState(() {
+        imageUrl = url;
+      });
     }
   }
 
@@ -159,81 +205,127 @@ class _NewRecipeState extends State<NewRecipe> {
         title: Text('Add New Recipe'),
       ),
       body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // name textfield
-                Padding(
-                  padding: const EdgeInsets.only(right: 32.0),
-                  child: TextFormField(
-                    onChanged: (val) {
-                      setState(() {
-                        recipeName = val;
-                      });
+        child: Column(
+          children: [
+            //photu
+            Container(
+              color: Colors.white,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                      margin: EdgeInsets.all(15),
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15),
+                        ),
+                        border: Border.all(color: Colors.white),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            offset: Offset(2, 2),
+                            spreadRadius: 2,
+                            blurRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: (imageUrl != "")
+                          ? Image.network(imageUrl)
+                          : Image.network('https://i.imgur.com/sUFH1Aq.png')),
+                  TextButton(
+                    onPressed: () {
+                      uploadImage();
                     },
-                    initialValue: name,
-                    decoration: InputDecoration(hintText: 'Enter Recipe Name'),
-                    validator: (v) {
-                      if (v!.trim().isEmpty) return 'Please enter something';
-                      return null;
-                    },
+                    child: Text("upload"),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Add Ingredients',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-                ),
-                ..._getIngredient(),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Add Steps',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-                ),
-                ..._getRecipe(),
-
-                SizedBox(
-                  height: 40,
-                ),
-                TextButton(
-                  onPressed: () async {
-                    try {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState?.save();
-                        if (name != "") {
-                          await DatabaseUtil(uid: user?.uid)
-                              .addNewRecipe(name!, ingredientsList, stepsList);
-                        } else {
-                          await DatabaseUtil(uid: user?.uid).addNewRecipe(
-                              recipeName, ingredientsList, stepsList);
-                        }
-                        await Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return Home(user: user);
-                          }),
-                        );
-                      }
-                    } catch (e) {
-                      print(e);
-                    }
-                  },
-                  child: Text('Submit'),
-                  style: TextButton.styleFrom(
-                    primary: Colors.green,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+            Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // name textfield
+                    Padding(
+                      padding: const EdgeInsets.only(right: 32.0),
+                      child: TextFormField(
+                        onChanged: (val) {
+                          setState(() {
+                            recipeName = val;
+                          });
+                        },
+                        initialValue: name,
+                        decoration:
+                            InputDecoration(hintText: 'Enter Recipe Name'),
+                        validator: (v) {
+                          if (v!.trim().isEmpty)
+                            return 'Please enter something';
+                          return null;
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Add Ingredients',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                    ),
+                    ..._getIngredient(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Add Steps',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                    ),
+                    ..._getRecipe(),
+
+                    SizedBox(
+                      height: 40,
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        try {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState?.save();
+                            if (name != "") {
+                              await DatabaseUtil(uid: user?.uid).addNewRecipe(
+                                  name!, ingredientsList, stepsList);
+                            } else {
+                              await DatabaseUtil(uid: user?.uid).addNewRecipe(
+                                  recipeName, ingredientsList, stepsList);
+                            }
+                            await Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return Wrapper();
+                              }),
+                            );
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                      child: Text('Submit'),
+                      style: TextButton.styleFrom(
+                        primary: Colors.green,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 100.0,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
