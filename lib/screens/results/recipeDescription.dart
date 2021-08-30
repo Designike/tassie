@@ -38,19 +38,23 @@ class _DescriptionState extends State<Description> {
       print(ingredients);
     });
     await getImage();
-    setState(() {
-      print(imageUrl);
-    });
+    if (this.mounted) {
+      setState(() {
+        print(imageUrl);
+      });
+    }
   }
 
   Future<void> getImage() async {
     final ref = FirebaseStorage.instance.ref().child('images/$uid/$name');
     // print(ref);
     var url = await ref.getDownloadURL();
-    setState(() {
-      // print(user.uid);
-      imageUrl = url;
-    });
+    if (this.mounted) {
+      setState(() {
+        // print(user.uid);
+        imageUrl = url;
+      });
+    }
   }
 
   @override

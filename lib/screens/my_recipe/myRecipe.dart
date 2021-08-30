@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:tassie/models/enduser.dart';
 import 'package:tassie/screens/Error/error.dart';
 import 'package:tassie/screens/new_recipe/newRecipe.dart';
+import 'package:tassie/screens/results/recipeDescription.dart';
 
 import '../../constants.dart';
 
@@ -11,35 +14,85 @@ class MyRecipe extends StatefulWidget {
   MyRecipe({this.user});
 
   @override
-  _MyRecipeState createState() => _MyRecipeState(user: user);
+  _Myrecipetate createState() => _Myrecipetate(user: user);
 }
 
-class _MyRecipeState extends State<MyRecipe> {
+class _Myrecipetate extends State<MyRecipe> {
   late final EndUser? user;
   late List<String> recipe = [];
-  _MyRecipeState({this.user});
+  late List<String> imageUrl = [];
+  late String userName = "";
+  late List<String> mixture = [];
+  bool isLoading = true;
+  _Myrecipetate({this.user});
+
+  Future<void> getName() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("userInfo")
+          .doc(user!.uid)
+          .get()
+          .then((value) {
+        userName = value["name"];
+        print(userName);
+      });
+    } catch (e) {
+      print(e);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) {
+          return UError(user: widget.user);
+        }),
+      );
+    }
+    setState(() {});
+  }
+
+  Future<void> getImage(String? uuid, List<String> repname) async {
+    for (int i = 0; i < repname.length; i++) {
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('images/' + uuid! + '/' + repname[i]);
+      // .child('images/jVRQiFTQbbTday9Ql4boxFHX9gr2/paneer tikka');
+      print(ref);
+      var url = await ref.getDownloadURL();
+      print(url);
+      // print(user.uid);
+      imageUrl.add(url);
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   Future<void> getData(List<String> recipe, EndUser? user) async {
     // late List<String> recipe = [];
-    try{
-    await FirebaseFirestore.instance
-        .collection('recipeCollection')
-        .doc(user?.uid)
-        .collection('userRecipeCollection')
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
-        recipe.add(doc["recipeName"]);
+    try {
+      await FirebaseFirestore.instance
+          .collection('recipeCollection')
+          .doc(user?.uid)
+          .collection('userRecipeCollection')
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          String tem = "";
+          recipe.add(doc["recipeName"]);
+          tem = user!.uid! + "-" + doc["recipeName"];
+          mixture.add(tem);
+        });
       });
-    });
-    }catch(e){
+      await getImage(user?.uid, recipe);
+    } catch (e) {
       print(e);
-      Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) {
-                  return UError(user: user);
-                }),
-              );
+      if (this.mounted) {
+        await Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) {
+            return UError(user: user);
+          }),
+        );
+      }
     }
     if (this.mounted) {
       setState(() {});
@@ -51,49 +104,226 @@ class _MyRecipeState extends State<MyRecipe> {
     // TODO: implement initState
     super.initState();
     getData(recipe, user);
+    getName();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[200],
-      appBar: AppBar(
-        backgroundColor: Colors.blue[900],
-        title: Text('Choose a Location'),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: ListView.builder(
-          itemCount: recipe.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
-              child: Card(
-                child: ListTile(
-                  onTap: () async {
-                    await Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) {
-                        return NewRecipe(user: user, name: recipe[index]);
-                      }),
-                    );
-                  },
-                  title: Text(recipe[index]),
-                ),
+    Size size = MediaQuery.of(context).size;
+    return (isLoading == true)
+        ? Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+              child: SpinKitThreeBounce(
+                color: kPrimaryColor,
+                size: 50.0,
               ),
-            );
-          }),
-    );
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     elevation: 0.0,
-    //     backgroundColor: kPrimaryColor,
-    //     leading: Icon(
-    //       Icons.menu,
-    //       color: Colors.white,
-    //     ),
-    //   ),
-    // );
+            ),
+          )
+        : Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return NewRecipe(
+                      user: user,
+                      name: "",
+                    );
+                  }),
+                );
+              },
+              child: Icon(Icons.add),
+              backgroundColor: kPrimaryColor,
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  backgroundColor: kPrimaryColor,
+                  expandedHeight: 200.0,
+                  elevation: 0.0,
+                  floating: true,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Container(
+                      decoration: BoxDecoration(
+                        color: kTextWhite,
+                      ),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            bottom: 0.0,
+                            child: Image.asset(
+                              'assets/photos/appbar-bg-lg.png',
+                              width: size.width,
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 20.0,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: kDefaultPadding),
+                              child: Text(
+                                'Yumminess\nahead!',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5!
+                                    .copyWith(
+                                      color: kPrimaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 35.0,
+                                    ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 1.0, horizontal: 4.0),
+                        child: Card(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: kDefaultPadding,
+                              vertical: kDefaultPadding / 2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: Stack(
+                            children: [
+                              // (imageUrl != "")
+                              //   ? Image.network(imageUrl)
+                              //   : Image.network('https://i.imgur.com/sUFH1Aq.png'))
+                              Ink.image(
+                                // image: NetworkImage(imageUrl[index]),
+                                // placeholder:NetworkImage('https://i.imgur.com/sUFH1Aq.png'),
+                                image: (imageUrl.length != 0)
+                                    ? NetworkImage(imageUrl[index])
+                                    : NetworkImage(
+                                        'https://i.imgur.com/sUFH1Aq.png'),
+
+                                child: InkWell(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return Description(
+                                            mixture: mixture[index]);
+                                      }),
+                                    );
+                                  },
+                                  child: Container(
+                                    width: size.width - (2 * kDefaultPadding),
+                                    padding: EdgeInsets.only(
+                                        top: kDefaultPadding * 3,
+                                        left: kDefaultPadding,
+                                        right: kDefaultPadding,
+                                        bottom: kDefaultPadding),
+                                    decoration: BoxDecoration(
+                                      color: kTextBlack[900]!.withOpacity(0.5),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          recipe[index].toUpperCase(),
+                                          style: TextStyle(
+                                            color: kPrimaryColor,
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          overflow: TextOverflow.clip,
+                                          softWrap: false,
+                                          maxLines: 1,
+                                        ),
+                                        Text(
+                                          (userName.length != 0)
+                                              ? userName.toUpperCase()
+                                              : "User".toUpperCase(),
+                                          style: TextStyle(
+                                            color: kTextWhite,
+                                            fontSize: 15.0,
+                                          ),
+                                          overflow: TextOverflow.clip,
+                                          softWrap: false,
+                                          maxLines: 1,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                // height: size.height * 0.25,
+                                // width: size.width - (2 * kDefaultPadding),
+                                fit: BoxFit.cover,
+                              ),
+                              // ListTile(
+                              //   onTap: () async {
+                              //     await Navigator.pushReplacement(
+                              //       context,
+                              //       MaterialPageRoute(builder: (context) {
+                              //         return RecipeDescription(user: 'user', name: recipe[index]);
+                              //       }),
+                              //     );
+                              //   },
+                              //   title: Text(recipe[index]),
+                              // ),
+                              // Positioned(
+                              //   bottom: 0.0,
+                              //   left: 0.0,
+                              //   child: Container(
+                              //     width: size.width - (2 * kDefaultPadding),
+                              //     padding: EdgeInsets.all(kDefaultPadding),
+                              //     decoration: BoxDecoration(
+                              //       color: kTextBlack[900].withOpacity(0.5),
+                              //     ),
+                              //     child: Flexible(
+                              //       child: Column(
+                              //         crossAxisAlignment: CrossAxisAlignment.start,
+                              //         children: [
+                              //           Text(
+                              //             recipe[index].toUpperCase(),
+                              //             style: TextStyle(
+                              //               color: kPrimaryColor,
+                              //               fontSize: 20.0,
+                              //               fontWeight: FontWeight.bold,
+                              //             ),
+                              //             overflow: TextOverflow.clip,
+                              //             softWrap: false,
+                              //             maxLines: 1,
+                              //           ),
+                              //           Text(
+                              //             'User'.toUpperCase(),
+                              //             style: TextStyle(
+                              //               color: kTextWhite,
+                              //               fontSize: 15.0,
+                              //             ),
+                              //             overflow: TextOverflow.clip,
+                              //             softWrap: false,
+                              //             maxLines: 1,
+                              //           ),
+                              //         ],
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    childCount: recipe.length,
+                  ),
+                )
+              ],
+            ),
+          );
   }
 }

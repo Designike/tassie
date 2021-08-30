@@ -167,7 +167,6 @@ class _RecipeResultsState extends State<RecipeResults> {
 
   Future<void> getImage(List<String> uuid, List<String> repname) async {
     for (int i = 0; i < uuid.length; i++) {
-      print("henlo");
       final ref = FirebaseStorage.instance
           .ref()
           .child('images/' + uuid[i] + '/' + repname[i]);
