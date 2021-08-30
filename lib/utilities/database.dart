@@ -17,9 +17,16 @@ class DatabaseUtil {
 
   Future addNewRecipe(
       String recipeName, List<String?> ingredients, List<String?> steps) async {
-    await databaseReference.collection("allRecipe").doc(uid).set({
-      "recipeName": recipeName,
-    });
+    await databaseReference
+        .collection("allRecipe")
+        .doc(uid! + "-" + recipeName)
+        .set(
+      {
+        "recipeName": recipeName.toLowerCase(),
+        "id": uid! + "-" + recipeName,
+      },
+      SetOptions(merge: true),
+    );
     return await databaseReference
         .collection("recipeCollection")
         .doc(uid)
@@ -27,7 +34,7 @@ class DatabaseUtil {
         .doc(recipeName)
         .set(
       {
-        "recipeName": recipeName,
+        "recipeName": recipeName.toLowerCase(),
         "ingredients": ingredients,
         "steps": steps,
       },

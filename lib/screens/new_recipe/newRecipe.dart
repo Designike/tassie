@@ -167,9 +167,10 @@ class _NewRecipeState extends State<NewRecipe> {
       });
       final ref =
           FirebaseStorage.instance.ref().child('images/${user!.uid}/$name');
-      print(ref);
+      // print(ref);
       var url = await ref.getDownloadURL();
       setState(() {
+        // print(user.uid);
         imageUrl = url;
       });
     }
@@ -213,26 +214,27 @@ class _NewRecipeState extends State<NewRecipe> {
               child: Column(
                 children: <Widget>[
                   Container(
-                      margin: EdgeInsets.all(15),
-                      padding: EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15),
-                        ),
-                        border: Border.all(color: Colors.white),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black12,
-                            offset: Offset(2, 2),
-                            spreadRadius: 2,
-                            blurRadius: 1,
-                          ),
-                        ],
+                    margin: EdgeInsets.all(15),
+                    padding: EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15),
                       ),
-                      child: (imageUrl != "")
-                          ? Image.network(imageUrl)
-                          : Image.network('https://i.imgur.com/sUFH1Aq.png')),
+                      border: Border.all(color: Colors.white),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          offset: Offset(2, 2),
+                          spreadRadius: 2,
+                          blurRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: (imageUrl != "")
+                        ? Image.network(imageUrl)
+                        : Image.network('https://i.imgur.com/sUFH1Aq.png'),
+                  ),
                   TextButton(
                     onPressed: () {
                       uploadImage();
@@ -361,7 +363,8 @@ class _StepTextFieldState extends State<StepTextField> {
     });
     return TextFormField(
       controller: _stepController,
-      onChanged: (v) => _NewRecipeState.stepsList[widget.index!] = v,
+      onChanged: (v) =>
+          _NewRecipeState.stepsList[widget.index!] = v.toLowerCase(),
       decoration: InputDecoration(hintText: 'Enter Each Step'),
       validator: (v) {
         if (v!.trim().isEmpty) return 'Please enter something';
@@ -401,7 +404,8 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
     });
     return TextFormField(
       controller: _ingredientController,
-      onChanged: (v) => _NewRecipeState.ingredientsList[widget.index!] = v,
+      onChanged: (v) =>
+          _NewRecipeState.ingredientsList[widget.index!] = v.toLowerCase(),
       decoration: InputDecoration(hintText: 'Enter Ingredients'),
       validator: (v) {
         if (v!.trim().isEmpty) return 'Please enter something';

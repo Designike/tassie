@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tassie/models/enduser.dart';
+import 'package:tassie/screens/Error/error.dart';
 import 'package:tassie/screens/new_recipe/newRecipe.dart';
+
+import '../../constants.dart';
 
 class MyRecipe extends StatefulWidget {
   late final EndUser? user;
@@ -18,6 +21,7 @@ class _MyRecipeState extends State<MyRecipe> {
 
   Future<void> getData(List<String> recipe, EndUser? user) async {
     // late List<String> recipe = [];
+    try{
     await FirebaseFirestore.instance
         .collection('recipeCollection')
         .doc(user?.uid)
@@ -28,7 +32,18 @@ class _MyRecipeState extends State<MyRecipe> {
         recipe.add(doc["recipeName"]);
       });
     });
-    setState(() {});
+    }catch(e){
+      print(e);
+      Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return UError(user: user);
+                }),
+              );
+    }
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -58,11 +73,11 @@ class _MyRecipeState extends State<MyRecipe> {
                 child: ListTile(
                   onTap: () async {
                     await Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return NewRecipe(user: user, name: recipe[index]);
-                          }),
-                        );
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return NewRecipe(user: user, name: recipe[index]);
+                      }),
+                    );
                   },
                   title: Text(recipe[index]),
                 ),
@@ -70,5 +85,15 @@ class _MyRecipeState extends State<MyRecipe> {
             );
           }),
     );
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     elevation: 0.0,
+    //     backgroundColor: kPrimaryColor,
+    //     leading: Icon(
+    //       Icons.menu,
+    //       color: Colors.white,
+    //     ),
+    //   ),
+    // );
   }
 }
