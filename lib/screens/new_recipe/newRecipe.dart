@@ -412,7 +412,8 @@ class _NewRecipeState extends State<NewRecipe> {
                                   }
                                 }
                               }
-                              if (_formKey.currentState!.validate() == true) {
+                              if (_formKey.currentState!.validate() == true &&
+                                  imageUrl != "") {
                                 _formKey.currentState?.save();
                                 if (name != "") {
                                   await DatabaseUtil(uid: user?.uid)
