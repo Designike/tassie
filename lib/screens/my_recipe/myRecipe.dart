@@ -34,7 +34,6 @@ class _Myrecipetate extends State<MyRecipe> {
           .get()
           .then((value) {
         userName = value["name"];
-        print(userName);
       });
     } catch (e) {
       print(e);
@@ -45,7 +44,9 @@ class _Myrecipetate extends State<MyRecipe> {
         }),
       );
     }
-    setState(() {});
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> getImage(String? uuid, List<String> repname) async {
@@ -54,16 +55,15 @@ class _Myrecipetate extends State<MyRecipe> {
           .ref()
           .child('images/' + uuid! + '/' + repname[i]);
       // .child('images/jVRQiFTQbbTday9Ql4boxFHX9gr2/paneer tikka');
-      print(ref);
       var url = await ref.getDownloadURL();
-      print(url);
       // print(user.uid);
       imageUrl.add(url);
     }
-
-    setState(() {
-      isLoading = false;
-    });
+    if (this.mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> getData(List<String> recipe, EndUser? user) async {
@@ -108,6 +108,11 @@ class _Myrecipetate extends State<MyRecipe> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return (isLoading == true)
@@ -129,6 +134,7 @@ class _Myrecipetate extends State<MyRecipe> {
                     return NewRecipe(
                       user: user,
                       name: "",
+                      recipes: recipe,
                     );
                   }),
                 );
@@ -164,7 +170,7 @@ class _Myrecipetate extends State<MyRecipe> {
                               padding:
                                   const EdgeInsets.only(left: kDefaultPadding),
                               child: Text(
-                                'Yumminess\nahead!',
+                                'Your\nyummies!',
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline5!
@@ -185,8 +191,9 @@ class _Myrecipetate extends State<MyRecipe> {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 1.0, horizontal: 4.0),
+                        // padding: const EdgeInsets.symmetric(
+                        //     vertical: 1.0, horizontal: 4.0),
+                        padding: EdgeInsets.all(0.0),
                         child: Card(
                           margin: EdgeInsets.symmetric(
                               horizontal: kDefaultPadding,
@@ -321,7 +328,10 @@ class _Myrecipetate extends State<MyRecipe> {
                     },
                     childCount: recipe.length,
                   ),
-                )
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(height: 80.0),
+                ),
               ],
             ),
           );

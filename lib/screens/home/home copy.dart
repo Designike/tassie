@@ -122,6 +122,7 @@ class _HomeCState extends State<HomeC> {
     if (this.mounted) {
       setState(() {
         recommended(repname, userName, url);
+        featured(recipes, userName, url);
       });
     }
   }
@@ -133,7 +134,7 @@ class _HomeCState extends State<HomeC> {
     while (t != 4) {
       Map tem = {};
       Random random = new Random();
-      int randomNumber = random.nextInt(5);
+      int randomNumber = random.nextInt(9);
       if (!numberList.contains(randomNumber)) {
         tem['recipeName'] = recipes[randomNumber];
         tem['userName'] = userName[randomNumber];
@@ -144,12 +145,34 @@ class _HomeCState extends State<HomeC> {
         t++;
       }
       if (this.mounted) {
-        setState(() {
-          if (recommend.length == 4) {
-            isLoading = false;
-          }
-        });
+        setState(() {});
       }
+    }
+  }
+
+  void featured(List<String> recipes, List<String> userName, List<String> url) {
+    List numberList = [];
+    var t = 0;
+    while (t != 4) {
+      Map tem = {};
+      Random random = new Random();
+      int randomNumber = random.nextInt(9);
+      if (!numberList.contains(randomNumber)) {
+        tem['recipeName'] = recipes[randomNumber];
+        tem['userName'] = userName[randomNumber];
+        tem['url'] = url[randomNumber];
+        tem['mixture'] = mixture[randomNumber];
+        feature.add(tem);
+        numberList.add(randomNumber);
+        t++;
+      }
+    }
+    if (this.mounted) {
+      setState(() {
+        if (feature.length == 4) {
+          isLoading = false;
+        }
+      });
     }
   }
 
@@ -163,6 +186,7 @@ class _HomeCState extends State<HomeC> {
   List<String> userName = [];
   List<String> mixture = [];
   List<Map> recommend = [];
+  List<Map> feature = [];
   bool isLoading = true;
   @override
   void dispose() {
@@ -236,7 +260,7 @@ class _HomeCState extends State<HomeC> {
               return new ListTile(
                 title: Text(filteredNames[index]),
                 onTap: () async {
-                  await Navigator.pushReplacement(
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) {
                       return RecipeResults(
@@ -272,10 +296,6 @@ class _HomeCState extends State<HomeC> {
             appBar: AppBar(
               elevation: 0.0,
               backgroundColor: kPrimaryColor,
-              leading: Icon(
-                Icons.menu,
-                color: Colors.white,
-              ),
             ),
             //nav
             // extendBody: true,
@@ -351,6 +371,7 @@ class _HomeCState extends State<HomeC> {
             body: Container(
               height: size.height,
               width: size.width,
+              margin: EdgeInsets.only(bottom: 50.0),
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
@@ -554,10 +575,92 @@ class _HomeCState extends State<HomeC> {
 
                               //Recommended with more button
                               TitleWithMoreButton(
-                                  title: "Featured", press: () {}),
+                                  title: "Featured",
+                                  press: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) {
+                                        return More(
+                                            user: user,
+                                            recipes: recipes,
+                                            imageUrl: url,
+                                            id: mixture,
+                                            userNames: userName);
+                                      }),
+                                    );
+                                  }),
 
                               // second row div
                               // RecommendedRecipes(recommend: recommend),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    RecipeCard(
+                                      title: feature[0]["recipeName"],
+                                      // : "Title".toUpperCase(),(recommend.length == 0)
+                                      recipeByUser: feature[0]["userName"],
+                                      // : "username".toUpperCase(),(recommend.length == 0)
+                                      press: () async {
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) {
+                                            return Description(
+                                                mixture: feature[0]["mixture"]);
+                                          }),
+                                        );
+                                      },
+                                      image: feature[0]["url"],
+                                      // : 'assets/photos/pizzo.jpeg',(recommend.length == 0)
+                                    ),
+                                    RecipeCard(
+                                      title: feature[1]["recipeName"],
+                                      // : "Title".toUpperCase(),(recommend.length == 0)
+                                      recipeByUser: feature[1]["userName"],
+                                      press: () async {
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) {
+                                            return Description(
+                                                mixture: feature[1]["mixture"]);
+                                          }),
+                                        );
+                                      },
+                                      image: feature[1]["url"],
+                                    ),
+                                    RecipeCard(
+                                      title: feature[2]["recipeName"],
+                                      // : "Title".toUpperCase(),(recommend.length == 0)
+                                      recipeByUser: feature[2]["userName"],
+                                      press: () async {
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) {
+                                            return Description(
+                                                mixture: feature[2]["mixture"]);
+                                          }),
+                                        );
+                                      },
+                                      image: feature[2]["url"],
+                                    ),
+                                    RecipeCard(
+                                      title: feature[3]["recipeName"],
+                                      // : "Title".toUpperCase(),(recommend.length == 0)
+                                      recipeByUser: feature[3]["userName"],
+                                      press: () async {
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) {
+                                            return Description(
+                                                mixture: feature[3]["mixture"]);
+                                          }),
+                                        );
+                                      },
+                                      image: feature[3]["url"],
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -1009,7 +1112,9 @@ class _RecommendedRecipesState extends State<RecommendedRecipes> {
   @override
   void initState() {
     super.initState();
-    setState(() {});
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   @override

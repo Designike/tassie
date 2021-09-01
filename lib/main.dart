@@ -8,6 +8,7 @@ import 'package:tassie/screens/home/home.dart';
 import 'package:tassie/screens/new_recipe/newRecipe.dart';
 import 'package:tassie/screens/wrapper.dart';
 import 'package:tassie/utilities/auth.dart';
+import 'constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +25,11 @@ class MyApp extends StatelessWidget {
       value: AuthUtil().user,
       initialData: EndUser(uid: ''),
       child: MaterialApp(
+        theme: ThemeData(
+          fontFamily: "Raleway",
+          accentColor: kPrimaryColorAccent,
+          primaryColor: kPrimaryColor,
+        ),
         home: Wrapper(),
       ),
     );

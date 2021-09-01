@@ -16,6 +16,17 @@ class _SignInCState extends State<SignInC> {
   String email = "";
   String error = "";
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   checkFields() {
     final form = _formKey.currentState;
     if (form!.validate()) {
@@ -48,7 +59,8 @@ class _SignInCState extends State<SignInC> {
                       style: TextStyle(
                         fontFamily: 'Raleway',
                         fontSize: 60.0,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.bold,
+                        color: kTextBlack[800]!,
                       ),
                     ),
                     Positioned(
@@ -58,7 +70,8 @@ class _SignInCState extends State<SignInC> {
                           style: TextStyle(
                             fontFamily: 'Raleway',
                             fontSize: 60.0,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.bold,
+                            color: kTextBlack[800]!,
                           ),
                         ))
                   ],
@@ -110,9 +123,11 @@ class _SignInCState extends State<SignInC> {
                     dynamic result =
                         await _auth.signInWithEmailAndPassword(email, password);
                     if (result == null) {
-                      setState(() {
-                        error = "Something went wrong";
-                      });
+                      if (this.mounted) {
+                        setState(() {
+                          error = "Something went wrong";
+                        });
+                      }
                     }
                   }
                 },
@@ -129,6 +144,7 @@ class _SignInCState extends State<SignInC> {
                         style: TextStyle(
                           fontFamily: 'Raleway',
                           color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -146,9 +162,9 @@ class _SignInCState extends State<SignInC> {
                   child: Container(
                     decoration: BoxDecoration(
                         border: Border.all(
-                          color: Colors.black,
+                          color: kTextBlack[800]!,
                           style: BorderStyle.solid,
-                          width: 1.0,
+                          width: 2.0,
                         ),
                         color: Colors.transparent,
                         borderRadius: BorderRadius.circular(25.0)),

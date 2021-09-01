@@ -14,9 +14,11 @@ class Authenticate extends StatefulWidget {
 class _AuthenticateState extends State<Authenticate> {
   bool showSignIn = true;
   void toggle() {
-    setState(() {
-      showSignIn = !showSignIn;
-    });
+    if (this.mounted) {
+      setState(() {
+        showSignIn = !showSignIn;
+      });
+    }
   }
 
   @override

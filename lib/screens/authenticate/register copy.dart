@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tassie/utilities/auth.dart';
 import 'package:tassie/utilities/database.dart';
 
+import '../../constants.dart';
+
 class RegisterC extends StatefulWidget {
   final Function? func;
   RegisterC({this.func});
@@ -16,6 +18,17 @@ class _RegisterCState extends State<RegisterC> {
   String error = "";
   String name = "";
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +52,8 @@ class _RegisterCState extends State<RegisterC> {
                       style: TextStyle(
                         fontFamily: 'Raleway',
                         fontSize: 60.0,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.bold,
+                        color: kTextBlack[800]!,
                       ),
                     ),
                     Positioned(
@@ -49,7 +63,8 @@ class _RegisterCState extends State<RegisterC> {
                           style: TextStyle(
                             fontFamily: 'Raleway',
                             fontSize: 60.0,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.bold,
+                            color: kTextBlack[800]!,
                           ),
                         ))
                   ],
@@ -62,9 +77,9 @@ class _RegisterCState extends State<RegisterC> {
                     labelStyle: TextStyle(
                         fontFamily: 'Raleway',
                         fontSize: 12.0,
-                        color: Colors.grey.withOpacity(0.5)),
+                        color: kTextBlack[800]!.withOpacity(0.5)),
                     focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.amber))),
+                        borderSide: BorderSide(color: kPrimaryColor))),
                 onChanged: (value) {
                   name = value;
                 },
@@ -76,9 +91,9 @@ class _RegisterCState extends State<RegisterC> {
                     labelStyle: TextStyle(
                         fontFamily: 'Raleway',
                         fontSize: 12.0,
-                        color: Colors.grey.withOpacity(0.5)),
+                        color: kTextBlack[800]!.withOpacity(0.5)),
                     focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.amber))),
+                        borderSide: BorderSide(color: kPrimaryColor))),
                 onChanged: (value) {
                   email = value;
                 },
@@ -97,9 +112,9 @@ class _RegisterCState extends State<RegisterC> {
                     labelStyle: TextStyle(
                         fontFamily: 'Raleway',
                         fontSize: 12.0,
-                        color: Colors.grey.withOpacity(0.5)),
+                        color: kTextBlack[800]!.withOpacity(0.5)),
                     focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.amber))),
+                        borderSide: BorderSide(color: kPrimaryColor))),
                 obscureText: true,
                 onChanged: (value) {
                   password = value;
@@ -115,9 +130,11 @@ class _RegisterCState extends State<RegisterC> {
                     dynamic result = await _auth.registerWithEmailAndPasword(
                         email, password, name);
                     if (result == null) {
-                      setState(() {
-                        error = "Something went wrong";
-                      });
+                      if (this.mounted) {
+                        setState(() {
+                          error = "Something went wrong";
+                        });
+                      }
                     }
                   }
                 },
@@ -125,15 +142,16 @@ class _RegisterCState extends State<RegisterC> {
                   height: 50.0,
                   child: Material(
                     borderRadius: BorderRadius.circular(25.0),
-                    shadowColor: Colors.amberAccent,
-                    color: Colors.amber,
+                    shadowColor: kPrimaryColorAccent,
+                    color: kPrimaryColor,
                     elevation: 5.0,
                     child: Center(
                       child: Text(
                         'REGISTER',
                         style: TextStyle(
                           fontFamily: 'Raleway',
-                          color: Colors.white,
+                          color: kTextWhite,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -151,9 +169,9 @@ class _RegisterCState extends State<RegisterC> {
                   child: Container(
                     decoration: BoxDecoration(
                         border: Border.all(
-                          color: Colors.black,
+                          color: kTextBlack[800]!,
                           style: BorderStyle.solid,
-                          width: 1.0,
+                          width: 2.0,
                         ),
                         color: Colors.transparent,
                         borderRadius: BorderRadius.circular(25.0)),
@@ -165,7 +183,7 @@ class _RegisterCState extends State<RegisterC> {
                             'Already have an account? Sign In',
                             style: TextStyle(
                               fontFamily: 'Raleway',
-                              color: Colors.black,
+                              color: kTextBlack[800],
                             ),
                           ),
                         ),

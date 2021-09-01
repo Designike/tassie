@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tassie/models/enduser.dart';
-import 'package:tassie/screens/home/home%20copy.dart';
-import 'package:tassie/screens/home/home.dart';
+import 'package:tassie/screens/my_recipe/myRecipe.dart';
 import 'package:tassie/screens/wrapper.dart';
 import 'package:tassie/utilities/auth.dart';
 import 'package:tassie/utilities/database.dart';
@@ -11,10 +11,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../constants.dart';
+
 class NewRecipe extends StatefulWidget {
   late final EndUser? user;
   late final String? name;
-  NewRecipe({this.user, this.name});
+  late final List<String> recipes;
+  NewRecipe({this.user, this.name, required this.recipes});
   @override
   _NewRecipeState createState() => _NewRecipeState(user: user, name: name);
 }
@@ -53,13 +56,15 @@ class _NewRecipeState extends State<NewRecipe> {
           stepsList.insert(index + 1, "");
         } else
           stepsList.removeAt(i);
-        setState(() {});
+        if (this.mounted) {
+          setState(() {});
+        }
       },
       child: Container(
         width: 30,
         height: 30,
         decoration: BoxDecoration(
-          color: (add) ? Colors.green : Colors.red,
+          color: (add) ? kPrimaryColor : kTextBlack[800],
           borderRadius: BorderRadius.circular(20),
         ),
         child: Icon(
@@ -98,13 +103,15 @@ class _NewRecipeState extends State<NewRecipe> {
           ingredientsList.insert(index + 1, "");
         } else
           ingredientsList.removeAt(i);
-        setState(() {});
+        if (this.mounted) {
+          setState(() {});
+        }
       },
       child: Container(
         width: 30,
         height: 30,
         decoration: BoxDecoration(
-          color: (add) ? Colors.green : Colors.red,
+          color: (add) ? kPrimaryColor : kTextBlack[800],
           borderRadius: BorderRadius.circular(20),
         ),
         child: Icon(
@@ -128,20 +135,24 @@ class _NewRecipeState extends State<NewRecipe> {
 
     if (permissionStatus.isGranted) {
       //Select Image
-      var image = (await _imagePicker.pickImage(source: ImageSource.gallery))!;
-      var file = File(image.path);
+      var image = (await _imagePicker.pickImage(
+          source: ImageSource.gallery, imageQuality: 25));
+      var file = File(image!.path);
 
       // ignore: unnecessary_null_comparison
       if (image != null) {
         //Upload to Firebase
+        print(recipeName);
         var snapshot = await _firebaseStorage
             .ref()
             .child('images/${user!.uid}/$recipeName')
             .putFile(file);
         var downloadUrl = await snapshot.ref.getDownloadURL();
-        setState(() {
-          imageUrl = downloadUrl;
-        });
+        if (this.mounted) {
+          setState(() {
+            imageUrl = downloadUrl;
+          });
+        }
       } else {
         print('No Image Path Received');
       }
@@ -169,10 +180,12 @@ class _NewRecipeState extends State<NewRecipe> {
           FirebaseStorage.instance.ref().child('images/${user!.uid}/$name');
       // print(ref);
       var url = await ref.getDownloadURL();
-      setState(() {
-        // print(user.uid);
-        imageUrl = url;
-      });
+      if (this.mounted) {
+        setState(() {
+          // print(user.uid);
+          imageUrl = url;
+        });
+      }
     }
   }
 
@@ -182,6 +195,7 @@ class _NewRecipeState extends State<NewRecipe> {
   static List<String?> stepsList = [null];
   static List<String?> ingredientsList = [null];
   String recipeName = "";
+  String error = "";
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
@@ -200,134 +214,355 @@ class _NewRecipeState extends State<NewRecipe> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.grey[200],
-      appBar: AppBar(
-        title: Text('Add New Recipe'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            //photu
-            Container(
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.all(15),
-                    padding: EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15),
+      backgroundColor: kTextWhite,
+      // appBar: AppBar(
+      //   title: Text('Add New Recipe'),
+      // ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(kDefaultPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // add recipe text
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: kDefaultPadding * 2,
+                    bottom: kDefaultPadding,
+                  ),
+                  child: Text(
+                    "Add new\nrecipe!",
+                    style: TextStyle(
+                      fontSize: 40.0,
+                      fontWeight: FontWeight.bold,
+                      color: kPrimaryColor,
+                    ),
+                  ),
+                ),
+
+                //upload image
+
+                Container(
+                  // color: Colors.white,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Hey, pick some mouth watering photo 😋",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        ),
                       ),
-                      border: Border.all(color: Colors.white),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          offset: Offset(2, 2),
-                          spreadRadius: 2,
-                          blurRadius: 1,
+
+                      // image
+                      // Container(
+                      //   width: size.width - (2 * kDefaultPadding),
+                      //   height: size.width - (2 * kDefaultPadding),
+                      //   margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                      //   padding: EdgeInsets.all(kDefaultPadding),
+                      //   decoration: BoxDecoration(
+                      //     color: kPrimaryColorAccent.withOpacity(0.4),
+                      //     borderRadius: BorderRadius.all(
+                      //       Radius.circular(15),
+                      //     ),
+                      //     // border: Border.all(color: Colors.white),
+                      //     boxShadow: [
+                      //       BoxShadow(
+                      //         color: kPrimaryColorAccent.withOpacity(0.5),
+                      //         offset: Offset(0, 5),
+                      //         // spreadRadius: 2,
+                      //         blurRadius: 5,
+                      //       ),
+                      //     ],
+                      //   ),
+                      //   child:
+                      Container(
+                        // height: size.width,
+                        width: size.width,
+                        // alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.symmetric(vertical: 20.0),
+                        child: (imageUrl != "")
+                            ? CachedNetworkImage(
+                                imageUrl: imageUrl,
+                                placeholder: (context, url) => Container(
+                                  height: size.width,
+                                  width: size.width,
+                                  // padding: EdgeInsets.symmetric(
+                                  //     vertical: size.width * 0.3),
+                                  alignment: Alignment.center,
+                                  child: CircularProgressIndicator(
+                                      backgroundColor: kPrimaryColor,
+                                      color: kTextBlack[800],
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          kTextBlack[800]!)),
+                                ),
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: 'https://i.imgur.com/sUFH1Aq.png',
+                                placeholder: (context, url) => Container(
+                                  height: size.width,
+                                  width: size.width,
+                                  // padding: EdgeInsets.symmetric(
+                                  //     vertical: size.width * 0.3),
+                                  alignment: Alignment.center,
+                                  child: CircularProgressIndicator(
+                                      backgroundColor: kPrimaryColor,
+                                      color: kTextBlack[800],
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          kTextBlack[800]!)),
+                                ),
+                              ),
+                      ),
+                      if (error != "") ...[
+                        Center(
+                          child: Text(
+                            error,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 14.0,
+                            ),
+                          ),
                         ),
                       ],
-                    ),
-                    child: (imageUrl != "")
-                        ? Image.network(imageUrl)
-                        : Image.network('https://i.imgur.com/sUFH1Aq.png'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      uploadImage();
-                    },
-                    child: Text("upload"),
-                  ),
-                ],
-              ),
-            ),
-            Form(
-              key: _formKey,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // name textfield
-                    Padding(
-                      padding: const EdgeInsets.only(right: 32.0),
-                      child: TextFormField(
-                        onChanged: (val) {
-                          setState(() {
-                            recipeName = val;
-                          });
+                      SizedBox(height: 20.0),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     uploadImage();
+                      //   },
+                      //   child: Text("Upload"),
+                      //   style: TextButton.styleFrom(
+                      //     primary: kTextWhite,
+                      //     backgroundColor: kTextBlack[800],
+                      //   ),
+                      // ),
+                      GestureDetector(
+                        onTap: () {
+                          uploadImage();
                         },
-                        initialValue: name,
-                        decoration:
-                            InputDecoration(hintText: 'Enter Recipe Name'),
-                        validator: (v) {
-                          if (v!.trim().isEmpty)
-                            return 'Please enter something';
-                          return null;
-                        },
+                        child: Container(
+                          height: 40.0,
+                          width: size.width * 0.3,
+                          child: Material(
+                            borderRadius: BorderRadius.circular(10.0),
+                            shadowColor: kTextBlack[700],
+                            color: kTextBlack[800],
+                            elevation: 5.0,
+                            child: Center(
+                              child: Text(
+                                'Upload',
+                                style: TextStyle(
+                                  fontFamily: 'Raleway',
+                                  color: Colors.white,
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      'Add Ingredients',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-                    ),
-                    ..._getIngredient(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      'Add Steps',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-                    ),
-                    ..._getRecipe(),
-
-                    SizedBox(
-                      height: 40,
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        try {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState?.save();
-                            if (name != "") {
-                              await DatabaseUtil(uid: user?.uid).addNewRecipe(
-                                  name!, ingredientsList, stepsList);
-                            } else {
-                              await DatabaseUtil(uid: user?.uid).addNewRecipe(
-                                  recipeName, ingredientsList, stepsList);
-                            }
-                            await Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) {
-                                return Wrapper();
-                              }),
-                            );
-                          }
-                        } catch (e) {
-                          print(e);
-                        }
-                      },
-                      child: Text('Submit'),
-                      style: TextButton.styleFrom(
-                        primary: Colors.green,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 100.0,
-                    )
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+                Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: kDefaultPadding),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // name textfield
+                        // Text(
+                        //   "Recipe Name",
+                        //   style: TextStyle(
+                        //       fontWeight: FontWeight.w700, fontSize: 16),
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(right: 32.0),
+                        //   child: TextFormField(
+                        //     onChanged: (val) {
+                        //       setState(() {
+                        //         recipeName = val.toLowerCase();
+                        //       });
+                        //     },
+                        //     initialValue: name,
+                        //     decoration:
+                        //         InputDecoration(hintText: 'Enter Recipe Name'),
+                        // validator: (v) {
+                        //   if (v!.trim().isEmpty)
+                        //     return 'Please enter something';
+                        //   if (widget.recipes.contains(v) == true)
+                        //     return "Already used Recipe Name";
+                        //   return null;
+                        // },
+                        //   ),
+                        // ),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Recipe Name',
+                            labelStyle: TextStyle(
+                              fontFamily: 'Raleway',
+                              fontSize: 20.0,
+                              color: kTextBlack[800]!.withOpacity(0.5),
+                              fontWeight: FontWeight.w500,
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: kPrimaryColor),
+                            ),
+                          ),
+                          onChanged: (val) {
+                            if (this.mounted) {
+                              setState(() {
+                                recipeName = val.toLowerCase();
+                              });
+                            }
+                          },
+                          validator: (v) {
+                            if (v!.trim().isEmpty)
+                              return 'Please enter something';
+                            if (widget.recipes.contains(v) == true)
+                              return "Already used Recipe Name";
+                            return null;
+                          },
+                        ),
+
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Text(
+                          'Ingredients',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700, fontSize: 20),
+                        ),
+                        ..._getIngredient(),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Text(
+                          'Steps',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700, fontSize: 20),
+                        ),
+                        ..._getRecipe(),
+
+                        SizedBox(
+                          height: 40,
+                        ),
+                        // TextButton(
+                        //   onPressed: () async {
+                        //     try {
+                        //       if (imageUrl == "") {
+                        //         setState(() {
+                        //           error = "Please upload a photo";
+                        //         });
+                        //       } else {
+                        //         setState(() {
+                        //           error = "";
+                        //         });
+                        //       }
+                        //       if (_formKey.currentState!.validate() == true) {
+                        //         _formKey.currentState?.save();
+                        //         if (name != "") {
+                        //           await DatabaseUtil(uid: user?.uid)
+                        //               .addNewRecipe(
+                        //                   name!, ingredientsList, stepsList);
+                        //         } else {
+                        //           await DatabaseUtil(uid: user?.uid)
+                        //               .addNewRecipe(recipeName, ingredientsList,
+                        //                   stepsList);
+                        //         }
+                        //         await Navigator.pushReplacement(
+                        //           context,
+                        //           MaterialPageRoute(builder: (context) {
+                        //             return Wrapper();
+                        //           }),
+                        //         );
+                        //       }
+                        //     } catch (e) {
+                        //       print(e);
+                        //     }
+                        //   },
+                        //   child: Text('Submit'),
+                        //   style: TextButton.styleFrom(
+                        //     primary: kTextWhite,
+                        //     backgroundColor: kTextBlack[800],
+                        //   ),
+                        // ),
+                        GestureDetector(
+                          onTap: () async {
+                            try {
+                              if (imageUrl == "") {
+                                if (this.mounted) {
+                                  setState(() {
+                                    error = "Please upload a photo";
+                                  });
+                                }
+                              } else {
+                                if (this.mounted) {
+                                  setState(() {
+                                    error = "";
+                                  });
+                                }
+                              }
+                              if (_formKey.currentState!.validate() == true) {
+                                _formKey.currentState?.save();
+                                if (name != "") {
+                                  await DatabaseUtil(uid: user?.uid)
+                                      .addNewRecipe(
+                                          name!, ingredientsList, stepsList);
+                                } else {
+                                  await DatabaseUtil(uid: user?.uid)
+                                      .addNewRecipe(recipeName, ingredientsList,
+                                          stepsList);
+                                }
+                                await Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return Wrapper();
+                                  }),
+                                );
+                              }
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
+                          child: Container(
+                            height: 40.0,
+                            width: size.width * 0.3,
+                            child: Material(
+                              borderRadius: BorderRadius.circular(10.0),
+                              shadowColor: kTextBlack[700],
+                              color: kTextBlack[800],
+                              elevation: 5.0,
+                              child: Center(
+                                child: Text(
+                                  'Submit',
+                                  style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    color: Colors.white,
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 100.0,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -365,7 +600,19 @@ class _StepTextFieldState extends State<StepTextField> {
       controller: _stepController,
       onChanged: (v) =>
           _NewRecipeState.stepsList[widget.index!] = v.toLowerCase(),
-      decoration: InputDecoration(hintText: 'Enter Each Step'),
+      // decoration: InputDecoration(hintText: 'Enter Each Step'),
+      decoration: InputDecoration(
+        labelText: 'Add Step',
+        labelStyle: TextStyle(
+          fontFamily: 'Raleway',
+          fontSize: 20.0,
+          color: kTextBlack[800]!.withOpacity(0.5),
+          fontWeight: FontWeight.w500,
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: kPrimaryColor),
+        ),
+      ),
       validator: (v) {
         if (v!.trim().isEmpty) return 'Please enter something';
         return null;
@@ -406,11 +653,38 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
       controller: _ingredientController,
       onChanged: (v) =>
           _NewRecipeState.ingredientsList[widget.index!] = v.toLowerCase(),
-      decoration: InputDecoration(hintText: 'Enter Ingredients'),
+      // decoration: InputDecoration(hintText: 'Enter Ingredients'),
+      decoration: InputDecoration(
+        labelText: 'Add Ingredient',
+        labelStyle: TextStyle(
+          fontFamily: 'Raleway',
+          fontSize: 20.0,
+          color: kTextBlack[800]!.withOpacity(0.5),
+          fontWeight: FontWeight.w500,
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: kPrimaryColor),
+        ),
+      ),
       validator: (v) {
         if (v!.trim().isEmpty) return 'Please enter something';
         return null;
       },
     );
+    // TextFormField(
+    //                       decoration: InputDecoration(
+    //                         labelText: 'Recipe Name',
+    //                         labelStyle: TextStyle(
+    //                           fontFamily: 'Raleway',
+    //                           fontSize: 20.0,
+    //                           color: kTextBlack[800]!.withOpacity(0.5),
+    //                           fontWeight: FontWeight.w500,
+    //                         ),
+    //                         focusedBorder: UnderlineInputBorder(
+    //                           borderSide: BorderSide(color: kPrimaryColor),
+    //                         ),
+    //                       ),
+    //                       onChanged: (value) {},
+    //                     ),
   }
 }

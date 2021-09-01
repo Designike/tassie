@@ -5,6 +5,7 @@ import 'package:tassie/screens/authenticate/authenticate.dart';
 import 'package:tassie/screens/home/home%20copy.dart';
 import 'package:tassie/screens/home/home.dart';
 import 'package:tassie/screens/my_recipe/myRecipe.dart';
+import 'package:tassie/screens/myprofile/myProfile.dart';
 import 'package:tassie/screens/new_recipe/newRecipe.dart';
 
 import '../constants.dart';
@@ -115,7 +116,7 @@ class _WrapperState extends State<Wrapper> with SingleTickerProviderStateMixin {
           children: [
             HomeC(user: user),
             MyRecipe(user: user),
-            NewRecipe(user: user, name: ""),
+            Profile(user: user),
           ],
           controller: _tabController,
         ),

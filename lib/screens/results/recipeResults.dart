@@ -135,11 +135,13 @@ class _RecipeResultsState extends State<RecipeResults> {
         }),
       );
     }
-    setState(() {
-      print(uuid);
-      print(repname);
-      print(imageUrl);
-    });
+    if (this.mounted) {
+      setState(() {
+        print(uuid);
+        print(repname);
+        print(imageUrl);
+      });
+    }
   }
 
   Future<void> getName(List<String> uuid) async {
@@ -162,7 +164,9 @@ class _RecipeResultsState extends State<RecipeResults> {
         }),
       );
     }
-    setState(() {});
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> getImage(List<String> uuid, List<String> repname) async {
@@ -177,8 +181,9 @@ class _RecipeResultsState extends State<RecipeResults> {
       // print(user.uid);
       imageUrl.add(url);
     }
-
-    setState(() {});
+    if (this.mounted) {
+      setState(() {});
+    }
   }
 
   // List<String> recipe = [
@@ -277,6 +282,11 @@ class _RecipeResultsState extends State<RecipeResults> {
     super.initState();
     getData(recipes, widget.user, widget.name);
     // getImage(uuid, repname);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
