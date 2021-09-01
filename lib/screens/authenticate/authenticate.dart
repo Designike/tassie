@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tassie/screens/authenticate/register%20copy%202.dart';
-import 'package:tassie/screens/authenticate/register%20copy.dart';
-import 'package:tassie/screens/authenticate/register.dart';
 import 'package:tassie/screens/authenticate/sign_in%20copy%202.dart';
-import 'package:tassie/screens/authenticate/sign_in%20copy.dart';
-import 'package:tassie/screens/authenticate/sign_in.dart';
+
+
 
 class Authenticate extends StatefulWidget {
   const Authenticate({Key? key}) : super(key: key);

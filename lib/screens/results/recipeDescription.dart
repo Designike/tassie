@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +28,8 @@ class _DescriptionState extends State<Description> {
   Future<void> getData() async {
     late List<String> result;
     result = widget.mixture!.split("-");
-    print(result);
     name = result[1];
-    print(name);
     uid = result[0];
-    print(uid);
     await FirebaseFirestore.instance
         .collection('recipeCollection')
         .doc(uid)
@@ -43,14 +39,11 @@ class _DescriptionState extends State<Description> {
         .then((doc) {
       steps = new List<String>.from(doc["steps"]);
       ingredients = new List<String>.from(doc["ingredients"]);
-      print(steps);
-      print(ingredients);
     });
     await getName();
     await getImage();
     if (this.mounted) {
       setState(() {
-        print(imageUrl);
         if (imageUrl.length != 0) {
           isLoading = false;
         }
@@ -83,11 +76,10 @@ class _DescriptionState extends State<Description> {
 
   Future<void> getImage() async {
     final ref = FirebaseStorage.instance.ref().child('images/$uid/$name');
-    // print(ref);
+ 
     var url = await ref.getDownloadURL();
     if (this.mounted) {
       setState(() {
-        // print(user.uid);
         imageUrl = url;
       });
     }
@@ -95,7 +87,6 @@ class _DescriptionState extends State<Description> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getData();
   }
@@ -131,68 +122,6 @@ class _DescriptionState extends State<Description> {
             floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
             body: CustomScrollView(
               slivers: [
-                // SliverAppBar(
-                //   backgroundColor: kPrimaryColor,
-                //   expandedHeight: 200.0,
-                //   elevation: 0.0,
-                //   floating: true,
-                //   flexibleSpace: FlexibleSpaceBar(
-                //     // background: Container(
-
-                //     //   child: Image.network(
-                //     //     ,
-                //     //     fit: BoxFit.cover,
-                //     //   ),
-                //     // ),
-                //     background: Container(
-                //       width: 350,
-                //       height: 300,
-                //       decoration: BoxDecoration(
-                //         image: DecorationImage(
-                //           image: NetworkImage('https://picsum.photos/200/300'),
-                //           fit: BoxFit.cover,
-                //           colorFilter: ColorFilter.mode(kPrimaryColor[300], BlendMode.modulate),
-                //         ),
-                //       ),
-                //       child: BackdropFilter(
-                //         filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-                //         child: Container(
-                //           color: Colors.black.withOpacity(0.1),
-                //         ),
-                //       ),
-                //     ),
-                //     // background: Container(
-                //     //   decoration: BoxDecoration(
-                //     //     color: kTextWhite,
-                //     //   ),
-                //     //   child: Stack(
-                //     //     children: [
-                //     //       Positioned(
-                //     //         bottom: 0.0,
-                //     //         child: Image.asset(
-                //     //           'assets/images/appbar-bg.png',
-                //     //           width: size.width,
-                //     //         ),
-                //     //       ),
-                //     //       Positioned(
-                //     //         bottom: 20.0,
-                //     //         child: Padding(
-                //     //           padding: const EdgeInsets.only(left: kDefaultPadding),
-                //     //           child: Text(
-                //     //             'Yumminess\nahead!',
-                //     //             style: Theme.of(context).textTheme.headline5.copyWith(
-                //     //                   color: kPrimaryColor,
-                //     //                   fontWeight: FontWeight.bold,
-                //     //                   fontSize: 35.0,
-                //     //                 ),
-                //     //           ),
-                //     //         ),
-                //     //       ),
-                //     //     ],
-                //     //   ),
-                //     // ),
-                //   ),
-                // ),
                 SliverPersistentHeader(
                   delegate: _RecipeAppBar(
                     minExtended: kToolbarHeight,
@@ -233,8 +162,6 @@ class DescriptionBody extends StatefulWidget {
 }
 
 class _DescriptionBodyState extends State<DescriptionBody> {
-  // Size size;
-  // _DescriptionBodyState({this.size});
 
   @override
   Widget build(BuildContext context) {
@@ -269,11 +196,6 @@ class _DescriptionBodyState extends State<DescriptionBody> {
             height: 10.0,
           ),
           MyList(listItems: widget.ingredients),
-
-          // margin space
-          // Container(
-          //   height: 50.0,
-          // ),
 
           // Steps
           TitleWithCustomUnderline(text: "Steps"),
@@ -340,11 +262,7 @@ class _RecipeAppBar extends SliverPersistentHeaderDelegate {
       bottom: 30,
       child: Container(
         height: 200.0,
-        // alignment: Alignment.topCenter,
         width: size.width,
-        // decoration: BoxDecoration(
-        //   color: kTextWhite,
-        // ),
         child: Image.asset(
           'assets/photos/abstract.png',
           fit: BoxFit.cover,
@@ -374,7 +292,6 @@ class _RecipeAppBar extends SliverPersistentHeaderDelegate {
         ],
       ),
     );
-    // throw UnimplementedError();
   }
 
   @override
@@ -394,29 +311,8 @@ class SliverBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Positioned(
-      // top: 0.0,
-      // left: 0.0,
-      // right: 0.0,
       bottom: 200.0,
-      // child: Container(
-      //   width: size.width,
-      //   // height: 300,
-      //   decoration: BoxDecoration(
-      //     image: DecorationImage(
-      //       image: NetworkImage('https://picsum.photos/200/300'),
-      //       fit: BoxFit.cover,
-      //       colorFilter: ColorFilter.mode(kPrimaryColor[300], BlendMode.modulate),
-      //     ),
-      //   ),
-      //   child: BackdropFilter(
-      //     filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-      //     child: Container(
-      //       color: Colors.black.withOpacity(0.1),
-      //     ),
-      //   ),
-      // ),
       child: Image.asset(
         'assets/photos/desc-bg-lg.png',
         width: size.width,
@@ -568,23 +464,10 @@ class MyList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Column(
-    //   children: [
-    //     ListTile(
-    //       leading: MyBullet(),
-    //       title: Text('My first line'),
-    //     ),
-    //     ListTile(
-    //       leading: MyBullet(),
-    //       title: Text('My second line'),
-    //     )
-    //   ],
-    // );
     return Container(
       child: ListView.builder(
           padding: EdgeInsets.only(bottom: 30.0),
           itemCount: listItems.length,
-          // scrollDirection: Axis.vertical,
           shrinkWrap: true,
           itemExtent: 30,
           itemBuilder: (context, index) {

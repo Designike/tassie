@@ -1,11 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tassie/models/enduser.dart';
-import 'package:tassie/screens/authenticate/authenticate.dart';
-import 'package:tassie/screens/home/home.dart';
-import 'package:tassie/screens/new_recipe/newRecipe.dart';
 import 'package:tassie/screens/wrapper.dart';
 import 'package:tassie/utilities/auth.dart';
 import 'constants.dart';

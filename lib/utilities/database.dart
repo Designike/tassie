@@ -41,26 +41,4 @@ class DatabaseUtil {
       SetOptions(merge: true),
     );
   }
-
-  // late List<String> recipename = [];
-  // Future myRecipe() async {
-  //   Stream<QuerySnapshot> querySnapshot = FirebaseFirestore.instance
-  //       .collection("recipeCollection")
-  //       .doc(uid)
-  //       .collection("userRecipeCollection")
-  //       .snapshots();
-  //   querySnapshot.forEach((field) {
-  //     field.docs.asMap().forEach((index, data) {
-  //       recipename.add(field.docs[index]["recipeName"]);
-  //     });
-  //   });
-  //   return recipename;
-  // for (var queryDocumentSnapshot in querySnapshot.docs) {
-  //   Map<String, dynamic> data = queryDocumentSnapshot.data();
-
-  //   name.add(data["recipeName"]);
-
-  //   return name;
-  // }
-  // }
 }

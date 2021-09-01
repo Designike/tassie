@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tassie/models/enduser.dart';
-import 'package:tassie/screens/my_recipe/myRecipe.dart';
+import 'package:tassie/screens/Error/error.dart';
 import 'package:tassie/screens/wrapper.dart';
 import 'package:tassie/utilities/auth.dart';
 import 'package:tassie/utilities/database.dart';
@@ -39,7 +39,6 @@ class _NewRecipeState extends State<NewRecipe> {
             SizedBox(
               width: 16,
             ),
-            // we need add button at last friends row
             _addRemoveButtonR(i == 0, stepsList.length - 1, i),
           ],
         ),
@@ -52,7 +51,6 @@ class _NewRecipeState extends State<NewRecipe> {
     return InkWell(
       onTap: () {
         if (add) {
-          // add new text-fields at the top of all friends textfields
           stepsList.insert(index + 1, "");
         } else
           stepsList.removeAt(i);
@@ -86,7 +84,6 @@ class _NewRecipeState extends State<NewRecipe> {
             SizedBox(
               width: 16,
             ),
-            // we need add button at last friends row
             _addRemoveButtonI(i == 0, ingredientsList.length - 1, i),
           ],
         ),
@@ -99,7 +96,6 @@ class _NewRecipeState extends State<NewRecipe> {
     return InkWell(
       onTap: () {
         if (add) {
-          // add new text-fields at the top of all friends textfields
           ingredientsList.insert(index + 1, "");
         } else
           ingredientsList.removeAt(i);
@@ -127,7 +123,6 @@ class _NewRecipeState extends State<NewRecipe> {
   Future uploadImage() async {
     final _firebaseStorage = FirebaseStorage.instance;
     final _imagePicker = ImagePicker();
-    // File image;
     //Check Permissions
     await Permission.photos.request();
 
@@ -142,7 +137,6 @@ class _NewRecipeState extends State<NewRecipe> {
       // ignore: unnecessary_null_comparison
       if (image != null) {
         //Upload to Firebase
-        print(recipeName);
         var snapshot = await _firebaseStorage
             .ref()
             .child('images/${user!.uid}/$recipeName')
@@ -178,11 +172,9 @@ class _NewRecipeState extends State<NewRecipe> {
       });
       final ref =
           FirebaseStorage.instance.ref().child('images/${user!.uid}/$name');
-      // print(ref);
       var url = await ref.getDownloadURL();
       if (this.mounted) {
         setState(() {
-          // print(user.uid);
           imageUrl = url;
         });
       }
@@ -217,9 +209,15 @@ class _NewRecipeState extends State<NewRecipe> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: kTextWhite,
-      // appBar: AppBar(
-      //   title: Text('Add New Recipe'),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Icon(Icons.arrow_back),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -246,7 +244,6 @@ class _NewRecipeState extends State<NewRecipe> {
                 //upload image
 
                 Container(
-                  // color: Colors.white,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -257,33 +254,8 @@ class _NewRecipeState extends State<NewRecipe> {
                           fontSize: 16,
                         ),
                       ),
-
-                      // image
-                      // Container(
-                      //   width: size.width - (2 * kDefaultPadding),
-                      //   height: size.width - (2 * kDefaultPadding),
-                      //   margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
-                      //   padding: EdgeInsets.all(kDefaultPadding),
-                      //   decoration: BoxDecoration(
-                      //     color: kPrimaryColorAccent.withOpacity(0.4),
-                      //     borderRadius: BorderRadius.all(
-                      //       Radius.circular(15),
-                      //     ),
-                      //     // border: Border.all(color: Colors.white),
-                      //     boxShadow: [
-                      //       BoxShadow(
-                      //         color: kPrimaryColorAccent.withOpacity(0.5),
-                      //         offset: Offset(0, 5),
-                      //         // spreadRadius: 2,
-                      //         blurRadius: 5,
-                      //       ),
-                      //     ],
-                      //   ),
-                      //   child:
                       Container(
-                        // height: size.width,
                         width: size.width,
-                        // alignment: Alignment.centerLeft,
                         margin: EdgeInsets.symmetric(vertical: 20.0),
                         child: (imageUrl != "")
                             ? CachedNetworkImage(
@@ -291,8 +263,6 @@ class _NewRecipeState extends State<NewRecipe> {
                                 placeholder: (context, url) => Container(
                                   height: size.width,
                                   width: size.width,
-                                  // padding: EdgeInsets.symmetric(
-                                  //     vertical: size.width * 0.3),
                                   alignment: Alignment.center,
                                   child: CircularProgressIndicator(
                                       backgroundColor: kPrimaryColor,
@@ -306,8 +276,6 @@ class _NewRecipeState extends State<NewRecipe> {
                                 placeholder: (context, url) => Container(
                                   height: size.width,
                                   width: size.width,
-                                  // padding: EdgeInsets.symmetric(
-                                  //     vertical: size.width * 0.3),
                                   alignment: Alignment.center,
                                   child: CircularProgressIndicator(
                                       backgroundColor: kPrimaryColor,
@@ -329,16 +297,6 @@ class _NewRecipeState extends State<NewRecipe> {
                         ),
                       ],
                       SizedBox(height: 20.0),
-                      // TextButton(
-                      //   onPressed: () {
-                      //     uploadImage();
-                      //   },
-                      //   child: Text("Upload"),
-                      //   style: TextButton.styleFrom(
-                      //     primary: kTextWhite,
-                      //     backgroundColor: kTextBlack[800],
-                      //   ),
-                      // ),
                       GestureDetector(
                         onTap: () {
                           uploadImage();
@@ -376,32 +334,6 @@ class _NewRecipeState extends State<NewRecipe> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // name textfield
-                        // Text(
-                        //   "Recipe Name",
-                        //   style: TextStyle(
-                        //       fontWeight: FontWeight.w700, fontSize: 16),
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(right: 32.0),
-                        //   child: TextFormField(
-                        //     onChanged: (val) {
-                        //       setState(() {
-                        //         recipeName = val.toLowerCase();
-                        //       });
-                        //     },
-                        //     initialValue: name,
-                        //     decoration:
-                        //         InputDecoration(hintText: 'Enter Recipe Name'),
-                        // validator: (v) {
-                        //   if (v!.trim().isEmpty)
-                        //     return 'Please enter something';
-                        //   if (widget.recipes.contains(v) == true)
-                        //     return "Already used Recipe Name";
-                        //   return null;
-                        // },
-                        //   ),
-                        // ),
                         TextFormField(
                           decoration: InputDecoration(
                             labelText: 'Recipe Name',
@@ -430,7 +362,6 @@ class _NewRecipeState extends State<NewRecipe> {
                             return null;
                           },
                         ),
-
                         SizedBox(
                           height: 40,
                         ),
@@ -449,50 +380,9 @@ class _NewRecipeState extends State<NewRecipe> {
                               fontWeight: FontWeight.w700, fontSize: 20),
                         ),
                         ..._getRecipe(),
-
                         SizedBox(
                           height: 40,
                         ),
-                        // TextButton(
-                        //   onPressed: () async {
-                        //     try {
-                        //       if (imageUrl == "") {
-                        //         setState(() {
-                        //           error = "Please upload a photo";
-                        //         });
-                        //       } else {
-                        //         setState(() {
-                        //           error = "";
-                        //         });
-                        //       }
-                        //       if (_formKey.currentState!.validate() == true) {
-                        //         _formKey.currentState?.save();
-                        //         if (name != "") {
-                        //           await DatabaseUtil(uid: user?.uid)
-                        //               .addNewRecipe(
-                        //                   name!, ingredientsList, stepsList);
-                        //         } else {
-                        //           await DatabaseUtil(uid: user?.uid)
-                        //               .addNewRecipe(recipeName, ingredientsList,
-                        //                   stepsList);
-                        //         }
-                        //         await Navigator.pushReplacement(
-                        //           context,
-                        //           MaterialPageRoute(builder: (context) {
-                        //             return Wrapper();
-                        //           }),
-                        //         );
-                        //       }
-                        //     } catch (e) {
-                        //       print(e);
-                        //     }
-                        //   },
-                        //   child: Text('Submit'),
-                        //   style: TextButton.styleFrom(
-                        //     primary: kTextWhite,
-                        //     backgroundColor: kTextBlack[800],
-                        //   ),
-                        // ),
                         GestureDetector(
                           onTap: () async {
                             try {
@@ -529,6 +419,14 @@ class _NewRecipeState extends State<NewRecipe> {
                               }
                             } catch (e) {
                               print(e);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) {
+                                  return UError(
+                                    user: user,
+                                  );
+                                }),
+                              );
                             }
                           },
                           child: Container(
@@ -600,7 +498,6 @@ class _StepTextFieldState extends State<StepTextField> {
       controller: _stepController,
       onChanged: (v) =>
           _NewRecipeState.stepsList[widget.index!] = v.toLowerCase(),
-      // decoration: InputDecoration(hintText: 'Enter Each Step'),
       decoration: InputDecoration(
         labelText: 'Add Step',
         labelStyle: TextStyle(
@@ -653,7 +550,6 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
       controller: _ingredientController,
       onChanged: (v) =>
           _NewRecipeState.ingredientsList[widget.index!] = v.toLowerCase(),
-      // decoration: InputDecoration(hintText: 'Enter Ingredients'),
       decoration: InputDecoration(
         labelText: 'Add Ingredient',
         labelStyle: TextStyle(
@@ -671,20 +567,5 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
         return null;
       },
     );
-    // TextFormField(
-    //                       decoration: InputDecoration(
-    //                         labelText: 'Recipe Name',
-    //                         labelStyle: TextStyle(
-    //                           fontFamily: 'Raleway',
-    //                           fontSize: 20.0,
-    //                           color: kTextBlack[800]!.withOpacity(0.5),
-    //                           fontWeight: FontWeight.w500,
-    //                         ),
-    //                         focusedBorder: UnderlineInputBorder(
-    //                           borderSide: BorderSide(color: kPrimaryColor),
-    //                         ),
-    //                       ),
-    //                       onChanged: (value) {},
-    //                     ),
   }
 }

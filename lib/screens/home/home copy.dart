@@ -6,10 +6,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:tassie/models/enduser.dart';
 import 'package:tassie/screens/Error/error.dart';
 import 'package:tassie/screens/home/More.dart';
-import 'package:tassie/screens/new_recipe/newRecipe.dart';
 import 'package:tassie/screens/results/recipeDescription.dart';
 import 'package:tassie/screens/results/recipeResults.dart';
-import 'package:tassie/utilities/auth.dart';
 
 import '../../constants.dart';
 
@@ -42,9 +40,6 @@ class _HomeCState extends State<HomeC> {
       }
     });
   }
-  // late TabController _tabController;
-// (doc) {
-//             print(doc["first_name"]);
 
   Future<void> setData() async {
     try {
@@ -78,29 +73,13 @@ class _HomeCState extends State<HomeC> {
     }
   }
 
-  // Future<void> getData() async {
-  //   FirebaseFirestore.instance
-  //       .collection('allRecipe')
-  //       .orderBy(Random())
-  //       .limit(4)
-  //       .get()
-  //       .then((QuerySnapshot querySnapshot) {
-  //     querySnapshot.docs.forEach((doc) {
-  //       print(doc["recipeName"]);
-  //     });
-  //   });
-  //   setState(() {});
-  // }
-
   Future<void> getImage(List<String> uuid, List<String> repname) async {
     try {
       for (int i = 0; i < uuid.length; i++) {
         final ref = FirebaseStorage.instance
             .ref()
             .child('images/' + uuid[i] + '/' + repname[i]);
-        // .child('images/jVRQiFTQbbTday9Ql4boxFHX9gr2/paneer tikka');
         var iurl = await ref.getDownloadURL();
-        // print(user.uid);
         url.add(iurl);
         await FirebaseFirestore.instance
             .collection("userInfo")
@@ -197,37 +176,7 @@ class _HomeCState extends State<HomeC> {
   void initState() {
     super.initState();
     setData();
-    // setState(() {});
-    //   // _tabController = TabController(length: 3, vsync: this);
   }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   _tabController.dispose();
-  // }
-  // Widget _buildList() {
-  //   if (!(_searchText.isEmpty)) {
-  //     List tempList = [];
-  //     for (int i = 0; i < filteredNames.length; i++) {
-  //       if (filteredNames[i]!
-  //           .toLowerCase()
-  //           .contains(_searchText.toLowerCase())) {
-  //         tempList.add(filteredNames[i]);
-  //       }
-  //     }
-  //     filteredNames = recipes;
-  //   }
-  //   return ListView.builder(
-  //     itemCount: names.length == 0 ? 0 : filteredNames.length,
-  //     itemBuilder: (BuildContext context, int index) {
-  //       return new ListTile(
-  //         title: Text(filteredNames[index]),
-  //         onTap: () {},
-  //       );
-  //     },
-  //   );
-  // }
 
   Widget? _buildList() {
     if (!(_searchText == "")) {
@@ -253,8 +202,9 @@ class _HomeCState extends State<HomeC> {
           ],
         ),
         child: LimitedBox(
-          maxHeight: 200.0,
+          maxHeight: 220.0,
           child: ListView.builder(
+            padding: EdgeInsets.all(0.0),
             itemCount: names.length == 0 ? 0 : filteredNames.length,
             itemBuilder: (BuildContext context, int index) {
               return new ListTile(
@@ -293,81 +243,6 @@ class _HomeCState extends State<HomeC> {
             ),
           )
         : Scaffold(
-            // appBar: AppBar(
-            //   elevation: 0.0,
-            //   backgroundColor: kPrimaryColor,
-            // ),
-            //nav
-            // extendBody: true,
-            // bottomNavigationBar: Container(
-            //   color: kTextWhite.withOpacity(0.0),
-            //   padding: EdgeInsets.all(kDefaultPadding),
-            //   child: ClipRRect(
-            //     borderRadius: BorderRadius.all(
-            //       Radius.circular(25.0),
-            //     ),
-            //     child: Container(
-            //       decoration: BoxDecoration(
-            //         color: kTextBlack[900]!.withOpacity(0.0),
-            //         boxShadow: [
-            //           BoxShadow(
-            //             color: kPrimaryColorAccent,
-            //             offset: Offset(0.0, 10.0),
-            //             blurRadius: 20.0,
-            //             spreadRadius: 10.0,
-            //           ),
-            //         ],
-            //       ),
-            //       // color: kTextWhite,
-            //       child: TabBar(
-            //         labelColor: kPrimaryColor,
-            //         unselectedLabelColor: kTextBlack[800],
-            //         // indicator: UnderlineTabIndicator(
-            //         //   borderSide: BorderSide(
-            //         //     color: kTextWhite,
-            //         //     width: 0.0,
-            //         //   ),
-            //         //   insets: EdgeInsets.fromLTRB(50.0, 0.0, 50.0, 40.0),
-            //         // ),
-            //         indicator: BoxDecoration(
-            //           color: kTextBlack[800],
-            //           boxShadow: [
-            //             BoxShadow(
-            //               color: kPrimaryColor,
-            //               offset: Offset(0.0, 10.0),
-            //               blurRadius: 20.0,
-            //               spreadRadius: 10.0,
-            //             ),
-            //           ],
-            //         ),
-            //         indicatorColor: kTextWhite,
-            //         tabs: [
-            //           Tab(
-            //             icon: Icon(
-            //               Icons.home,
-            //               size: 25.0,
-            //             ),
-            //           ),
-            //           Tab(
-            //             icon: Icon(
-            //               Icons.restaurant,
-            //               size: 25.0,
-            //             ),
-            //           ),
-            //           Tab(
-            //             icon: Icon(
-            //               Icons.account_circle,
-            //               size: 25.0,
-            //             ),
-            //           ),
-            //         ],
-            //         controller: _tabController,
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            //body
-
             body: Container(
               height: size.height,
               width: size.width,
@@ -410,8 +285,6 @@ class _HomeCState extends State<HomeC> {
                                       ),
                                 ),
                                 Spacer(),
-                                // Image.asset('assets/photos/profile.png',
-                                //     height: size.width * 0.2, width: size.width * 0.2,),
                               ],
                             ),
                           ),
@@ -461,17 +334,12 @@ class _HomeCState extends State<HomeC> {
                                       ],
                                     ),
                                   ),
-                                  // Container(
-                                  //   height: 100.0,
-                                  //   child: _buildList(),
-                                  //   // child: Text('henlo'),
-                                  // ),
                                 ],
                               ),
                             ),
                           ),
 
-                          //serach box end
+                          //search box end
                         ],
                       ),
                     ),
@@ -506,9 +374,7 @@ class _HomeCState extends State<HomeC> {
                                   children: [
                                     RecipeCard(
                                       title: recommend[0]["recipeName"],
-                                      // : "Title".toUpperCase(),(recommend.length == 0)
                                       recipeByUser: recommend[0]["userName"],
-                                      // : "username".toUpperCase(),(recommend.length == 0)
                                       press: () async {
                                         await Navigator.push(
                                           context,
@@ -520,11 +386,9 @@ class _HomeCState extends State<HomeC> {
                                         );
                                       },
                                       image: recommend[0]["url"],
-                                      // : 'assets/photos/pizzo.jpeg',(recommend.length == 0)
                                     ),
                                     RecipeCard(
                                       title: recommend[1]["recipeName"],
-                                      // : "Title".toUpperCase(),(recommend.length == 0)
                                       recipeByUser: recommend[1]["userName"],
                                       press: () async {
                                         await Navigator.push(
@@ -540,7 +404,6 @@ class _HomeCState extends State<HomeC> {
                                     ),
                                     RecipeCard(
                                       title: recommend[2]["recipeName"],
-                                      // : "Title".toUpperCase(),(recommend.length == 0)
                                       recipeByUser: recommend[2]["userName"],
                                       press: () async {
                                         await Navigator.push(
@@ -556,7 +419,6 @@ class _HomeCState extends State<HomeC> {
                                     ),
                                     RecipeCard(
                                       title: recommend[3]["recipeName"],
-                                      // : "Title".toUpperCase(),(recommend.length == 0)
                                       recipeByUser: recommend[3]["userName"],
                                       press: () async {
                                         await Navigator.push(
@@ -599,9 +461,7 @@ class _HomeCState extends State<HomeC> {
                                   children: [
                                     RecipeCard(
                                       title: feature[0]["recipeName"],
-                                      // : "Title".toUpperCase(),(recommend.length == 0)
                                       recipeByUser: feature[0]["userName"],
-                                      // : "username".toUpperCase(),(recommend.length == 0)
                                       press: () async {
                                         await Navigator.push(
                                           context,
@@ -612,11 +472,9 @@ class _HomeCState extends State<HomeC> {
                                         );
                                       },
                                       image: feature[0]["url"],
-                                      // : 'assets/photos/pizzo.jpeg',(recommend.length == 0)
                                     ),
                                     RecipeCard(
                                       title: feature[1]["recipeName"],
-                                      // : "Title".toUpperCase(),(recommend.length == 0)
                                       recipeByUser: feature[1]["userName"],
                                       press: () async {
                                         await Navigator.push(
@@ -631,7 +489,6 @@ class _HomeCState extends State<HomeC> {
                                     ),
                                     RecipeCard(
                                       title: feature[2]["recipeName"],
-                                      // : "Title".toUpperCase(),(recommend.length == 0)
                                       recipeByUser: feature[2]["userName"],
                                       press: () async {
                                         await Navigator.push(
@@ -646,7 +503,6 @@ class _HomeCState extends State<HomeC> {
                                     ),
                                     RecipeCard(
                                       title: feature[3]["recipeName"],
-                                      // : "Title".toUpperCase(),(recommend.length == 0)
                                       recipeByUser: feature[3]["userName"],
                                       press: () async {
                                         await Navigator.push(
@@ -671,46 +527,17 @@ class _HomeCState extends State<HomeC> {
                           top: 0.0,
                           left: 0.0,
                           right: 0.0,
-                          // child: Container(
-                          //   height: 400.0,
-                          //   margin: EdgeInsets.all(kDefaultPadding),
-                          //   decoration: BoxDecoration(
-                          //     color: Colors.red,
-                          //   ),
-                          // ),
                           child: Container(
                             margin: EdgeInsets.only(
                               left: kDefaultPadding,
                               right: kDefaultPadding,
                             ),
-                            // decoration: BoxDecoration(
-                            //   boxShadow: [
-                            //     BoxShadow(
-                            //       color: kPrimaryColorAccent.withOpacity(0.5),
-                            //       offset: Offset(0.0, 15.0),
-                            //       blurRadius: 5.0,
-                            //     ),
-                            //   ],
-                            // ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.all(
                                 Radius.circular(20.0),
                               ),
                               child: Container(
                                 child: _buildList(),
-                                // height: 100.0,
-                                // decoration: BoxDecoration(
-                                //   color: kTextWhite,
-                                // ),
-                                // decoration: BoxDecoration(
-                                //   boxShadow: [
-                                //     BoxShadow(
-                                //       color: kPrimaryColorAccent.withOpacity(0.5),
-                                //       offset: Offset(0.0, 15.0),
-                                //       blurRadius: 5.0,
-                                //     ),
-                                //   ],
-                                // ),
                               ),
                             ),
                           ),
@@ -722,46 +549,13 @@ class _HomeCState extends State<HomeC> {
               ),
             ),
           );
-    // return Container(
-    //   child: Scaffold(
-    //     backgroundColor: Colors.brown[50],
-    //     appBar: AppBar(
-    //       title: Text('Tassie'),
-    //       backgroundColor: Colors.brown[400],
-    //       elevation: 0.0,
-    //       actions: <Widget>[
-    //         TextButton.icon(
-    //           icon: Icon(Icons.person),
-    //           label: Text('logout'),
-    //           onPressed: () async {
-    //             await _auth.signOut();
-    //           },
-    //         ),
-    //         TextButton.icon(
-    //           icon: Icon(Icons.plus_one),
-    //           label: Text('New'),
-    //           onPressed: () async {
-    //             Navigator.pushReplacement(
-    //               context,
-    //               MaterialPageRoute(builder: (context) {
-    //                 return NewRecipe(user: user);
-    //               }),
-    //             );
-    //           },
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 }
 
 class HeaderWithSearchBox extends StatefulWidget {
   const HeaderWithSearchBox({
-    // required Key key,
     required this.size,
   });
-  // : super(key: key);
   final Size size;
 
   @override
@@ -769,78 +563,6 @@ class HeaderWithSearchBox extends StatefulWidget {
 }
 
 class _HeaderWithSearchBoxState extends State<HeaderWithSearchBox> {
-  // _HeaderWithSearchBoxState() {
-  //   _filter.addListener(() {
-  //     if (_filter.text.isEmpty) {
-  //       setState(() {
-  //         _searchText = "";
-  //         filteredNames = names;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         _searchText = _filter.text;
-  //         filteredNames = names;
-  //       });
-  //     }
-  //   });
-  // }
-
-  // final TextEditingController _filter = new TextEditingController();
-  // String _searchText = "";
-  // List<String> names = [];
-  // List<String> filteredNames = [];
-  // List<String> recipes = [];
-  // // Icon _searchIcon = new Icon(Icons.search);
-
-  // Future<void> setData() async {
-  //   await FirebaseFirestore.instance
-  //       .collection('allRecipe')
-  //       .get()
-  //       .then((QuerySnapshot querySnapshot) {
-  //     querySnapshot.docs.forEach((doc) {
-  //       recipes.add(doc["recipeName"]);
-  //     });
-  //   });
-  //   setState(() {
-  //     names = recipes;
-  //     filteredNames = names;
-  //   });
-  // }
-
-  // Widget? _buildList() {
-  //   if (!(_searchText == "")) {
-  //     List<String> tempList = [];
-  //     for (int i = 0; i < filteredNames.length; i++) {
-  //       if (filteredNames[i]
-  //           .toLowerCase()
-  //           .contains(_searchText.toLowerCase())) {
-  //         tempList.add(filteredNames[i]);
-  //       }
-  //     }
-  //     filteredNames = tempList;
-
-  //     return ListView.builder(
-  //       itemCount: names.length == 0 ? 0 : filteredNames.length,
-  //       itemBuilder: (BuildContext context, int index) {
-  //         return new ListTile(
-  //           title: Text(filteredNames[index]),
-  //           onTap: () {},
-  //         );
-  //       },
-  //     );
-  //   } else {
-  //     return null;
-  //   }
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   setData();
-  //   setState(() {});
-  //   // _tabController = TabController(length: 3, vsync: this);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -873,7 +595,6 @@ class _HeaderWithSearchBoxState extends State<HeaderWithSearchBox> {
                       ),
                 ),
                 Spacer(),
-                // Image.asset(''),
               ],
             ),
           ),
@@ -918,17 +639,12 @@ class _HeaderWithSearchBoxState extends State<HeaderWithSearchBox> {
                       ],
                     ),
                   ),
-                  // Container(
-                  //   height: 100.0,
-                  //   child: _buildList(),
-                  //   // child: Text('henlo'),
-                  // ),
                 ],
               ),
             ),
           ),
 
-          //serach box end
+          //search box end
         ],
       ),
     );
@@ -939,7 +655,6 @@ class TitleWithCustomUnderline extends StatelessWidget {
   const TitleWithCustomUnderline({required this.text});
 
   final String text;
-// : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -975,7 +690,6 @@ class TitleWithCustomUnderline extends StatelessWidget {
 
 class TitleWithMoreButton extends StatelessWidget {
   const TitleWithMoreButton({required this.title, required this.press});
-// : super(key: key);
   final String title;
   final Function press;
   @override
@@ -1016,13 +730,11 @@ class TitleWithMoreButton extends StatelessWidget {
 
 class RecipeCard extends StatelessWidget {
   const RecipeCard({
-    // required Key key,
     required this.image,
     required this.title,
     required this.recipeByUser,
     required this.press,
   });
-// : super(key: key);
   final String image, title, recipeByUser;
   final Function press;
 

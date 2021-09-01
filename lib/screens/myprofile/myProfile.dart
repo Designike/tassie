@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:tassie/models/enduser.dart';
 import 'package:tassie/screens/Error/error.dart';
-
 import '../../constants.dart';
-import '../../main.dart';
 import '../wrapper.dart';
 
 class Profile extends StatefulWidget {
@@ -46,7 +44,6 @@ class _ProfileState extends State<Profile> {
             }
           });
         }
-        // print(userName);
       });
     } catch (e) {
       print(e);
@@ -64,8 +61,6 @@ class _ProfileState extends State<Profile> {
     super.initState();
     getName();
     getemail();
-    print(userName);
-    print(email);
   }
 
   @override
@@ -103,13 +98,6 @@ class _ProfileState extends State<Profile> {
                     ),
                     decoration: BoxDecoration(
                       color: kPrimaryColorAccent.withOpacity(0.2),
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //     color: kTextBlack[700]!.withOpacity(0.2),
-                      //     offset: Offset(0.0, 5.0),
-                      //     blurRadius: 15.0,
-                      //   ),
-                      // ],
                     ),
                   ),
                 ),
@@ -139,15 +127,9 @@ class _ProfileState extends State<Profile> {
                             height: size.height * 0.1,
                           ),
                           Container(
-                            // height: 250.0,
                             padding: EdgeInsets.all(kDefaultPadding),
-                            // decoration: BoxDecoration(),
                             child: Row(
                               children: [
-                                // Icon(
-                                //   Icons.perm_identity,
-                                //   size: 50,
-                                // ),
                                 ClipOval(
                                   child: Material(
                                     color: kPrimaryColor, // Button color
@@ -180,15 +162,9 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                           Container(
-                            // height: 250.0,
                             padding: EdgeInsets.all(kDefaultPadding),
-                            // decoration: BoxDecoration(),
                             child: Row(
                               children: [
-                                // Icon(
-                                //   Icons.perm_identity,
-                                //   size: 50,
-                                // ),
                                 ClipOval(
                                   child: Material(
                                     color: kPrimaryColor, // Button color
@@ -220,8 +196,6 @@ class _ProfileState extends State<Profile> {
                               ],
                             ),
                           ),
-                          // LogoutSlider(size: size),
-                          // Spacer(),
                           GestureDetector(
                             onTap: () async {
                               await _auth.signOut();
@@ -284,16 +258,6 @@ class _ProfileState extends State<Profile> {
                         width: size.width * 0.4,
                       ),
                     ),
-                    // decoration: BoxDecoration(
-                    //   color: kPrimaryColorAccent,
-                    //   boxShadow: [
-                    //     BoxShadow(
-                    //       color: kTextBlack[700]!.withOpacity(0.2),
-                    //       offset: Offset(0.0, 5.0),
-                    //       blurRadius: 15.0,
-                    //     ),
-                    //   ],
-                    // ),
                   ),
                 ),
               ],
@@ -301,14 +265,3 @@ class _ProfileState extends State<Profile> {
           );
   }
 }
-
-
-// () async {
-      //   await _auth.signOut();
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (context) {
-      //       return MyApp();
-      //     }),
-      //   );
-      // },

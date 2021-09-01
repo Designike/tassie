@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tassie/models/enduser.dart';
-import 'package:tassie/screens/home/home%20copy.dart';
 import 'package:tassie/screens/wrapper.dart';
 
 class UError extends StatelessWidget {
@@ -21,7 +20,6 @@ class UError extends StatelessWidget {
                 await Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) {
-                    // return HomeC(user: user);
                     return Wrapper();
                   }),
                 );

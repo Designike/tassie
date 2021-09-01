@@ -54,9 +54,7 @@ class _Myrecipetate extends State<MyRecipe> {
       final ref = FirebaseStorage.instance
           .ref()
           .child('images/' + uuid! + '/' + repname[i]);
-      // .child('images/jVRQiFTQbbTday9Ql4boxFHX9gr2/paneer tikka');
       var url = await ref.getDownloadURL();
-      // print(user.uid);
       imageUrl.add(url);
     }
     if (this.mounted) {
@@ -67,7 +65,6 @@ class _Myrecipetate extends State<MyRecipe> {
   }
 
   Future<void> getData(List<String> recipe, EndUser? user) async {
-    // late List<String> recipe = [];
     try {
       await FirebaseFirestore.instance
           .collection('recipeCollection')
@@ -101,7 +98,6 @@ class _Myrecipetate extends State<MyRecipe> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getData(recipe, user);
     getName();
@@ -191,8 +187,6 @@ class _Myrecipetate extends State<MyRecipe> {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       return Padding(
-                        // padding: const EdgeInsets.symmetric(
-                        //     vertical: 1.0, horizontal: 4.0),
                         padding: EdgeInsets.all(0.0),
                         child: Card(
                           margin: EdgeInsets.symmetric(
@@ -204,12 +198,7 @@ class _Myrecipetate extends State<MyRecipe> {
                           clipBehavior: Clip.antiAlias,
                           child: Stack(
                             children: [
-                              // (imageUrl != "")
-                              //   ? Image.network(imageUrl)
-                              //   : Image.network('https://i.imgur.com/sUFH1Aq.png'))
                               Ink.image(
-                                // image: NetworkImage(imageUrl[index]),
-                                // placeholder:NetworkImage('https://i.imgur.com/sUFH1Aq.png'),
                                 image: (imageUrl.length != 0)
                                     ? NetworkImage(imageUrl[index])
                                     : NetworkImage(
@@ -267,60 +256,8 @@ class _Myrecipetate extends State<MyRecipe> {
                                     ),
                                   ),
                                 ),
-                                // height: size.height * 0.25,
-                                // width: size.width - (2 * kDefaultPadding),
                                 fit: BoxFit.cover,
                               ),
-                              // ListTile(
-                              //   onTap: () async {
-                              //     await Navigator.pushReplacement(
-                              //       context,
-                              //       MaterialPageRoute(builder: (context) {
-                              //         return RecipeDescription(user: 'user', name: recipe[index]);
-                              //       }),
-                              //     );
-                              //   },
-                              //   title: Text(recipe[index]),
-                              // ),
-                              // Positioned(
-                              //   bottom: 0.0,
-                              //   left: 0.0,
-                              //   child: Container(
-                              //     width: size.width - (2 * kDefaultPadding),
-                              //     padding: EdgeInsets.all(kDefaultPadding),
-                              //     decoration: BoxDecoration(
-                              //       color: kTextBlack[900].withOpacity(0.5),
-                              //     ),
-                              //     child: Flexible(
-                              //       child: Column(
-                              //         crossAxisAlignment: CrossAxisAlignment.start,
-                              //         children: [
-                              //           Text(
-                              //             recipe[index].toUpperCase(),
-                              //             style: TextStyle(
-                              //               color: kPrimaryColor,
-                              //               fontSize: 20.0,
-                              //               fontWeight: FontWeight.bold,
-                              //             ),
-                              //             overflow: TextOverflow.clip,
-                              //             softWrap: false,
-                              //             maxLines: 1,
-                              //           ),
-                              //           Text(
-                              //             'User'.toUpperCase(),
-                              //             style: TextStyle(
-                              //               color: kTextWhite,
-                              //               fontSize: 15.0,
-                              //             ),
-                              //             overflow: TextOverflow.clip,
-                              //             softWrap: false,
-                              //             maxLines: 1,
-                              //           ),
-                              //         ],
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
                         ),

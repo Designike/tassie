@@ -3,10 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:tassie/models/enduser.dart';
 import 'package:tassie/screens/authenticate/authenticate.dart';
 import 'package:tassie/screens/home/home%20copy.dart';
-import 'package:tassie/screens/home/home.dart';
 import 'package:tassie/screens/my_recipe/myRecipe.dart';
 import 'package:tassie/screens/myprofile/myProfile.dart';
-import 'package:tassie/screens/new_recipe/newRecipe.dart';
+
 
 import '../constants.dart';
 
@@ -34,11 +33,8 @@ class _WrapperState extends State<Wrapper> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final user = Provider.of<EndUser>(context);
     Size size = MediaQuery.of(context).size;
-    //
-
-    //
+    
     if (user.uid != null) {
-      // return HomeC(user: user);
 
       return Scaffold(
         //nav
@@ -62,17 +58,9 @@ class _WrapperState extends State<Wrapper> with SingleTickerProviderStateMixin {
                   ),
                 ],
               ),
-              // color: kTextWhite,
               child: TabBar(
                 labelColor: kPrimaryColor,
                 unselectedLabelColor: kTextBlack[800],
-                // indicator: UnderlineTabIndicator(
-                //   borderSide: BorderSide(
-                //     color: kTextWhite,
-                //     width: 0.0,
-                //   ),
-                //   insets: EdgeInsets.fromLTRB(50.0, 0.0, 50.0, 40.0),
-                // ),
                 indicator: BoxDecoration(
                   color: kTextBlack[800],
                   boxShadow: [
@@ -122,7 +110,6 @@ class _WrapperState extends State<Wrapper> with SingleTickerProviderStateMixin {
         ),
       );
     } else {
-      //Authenticate()
       return Authenticate();
     }
   }
