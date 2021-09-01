@@ -46,9 +46,11 @@ class _SignInState extends State<SignIn> {
                     return null;
                   },
                   onChanged: (val) {
-                    setState(() {
-                      email = val;
-                    });
+                    if (this.mounted) {
+                      setState(() {
+                        email = val;
+                      });
+                    }
                   },
                 ),
                 SizedBox(height: 20.0),
@@ -58,9 +60,11 @@ class _SignInState extends State<SignIn> {
                       ? 'Enter password 6+ characters long'
                       : null,
                   onChanged: (val) {
-                    setState(() {
-                      password = val;
-                    });
+                    if (this.mounted) {
+                      setState(() {
+                        password = val;
+                      });
+                    }
                   },
                 ),
                 SizedBox(height: 20.0),
@@ -71,23 +75,12 @@ class _SignInState extends State<SignIn> {
                       dynamic result = await _auth.signInWithEmailAndPassword(
                           email, password);
                       if (result == null) {
-                        setState(() {
-                          error = "Something went wrong";
-                        });
+                        if (this.mounted) {
+                          setState(() {
+                            error = "Something went wrong";
+                          });
+                        }
                       }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.grey[850],
-                  ),
-                ),
-                SizedBox(height: 20.0),
-                ElevatedButton(
-                  child: Text('Guest Login'),
-                  onPressed: () async {
-                    dynamic result = await _auth.signInAnon();
-                    if (result == null) {
-                      print('error signing in');
                     }
                   },
                   style: ElevatedButton.styleFrom(

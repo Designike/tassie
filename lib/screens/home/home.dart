@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:tassie/main.dart';
+import 'package:tassie/models/enduser.dart';
+import 'package:tassie/screens/my_recipe/myRecipe.dart';
 import 'package:tassie/utilities/auth.dart';
 
 class Home extends StatelessWidget {
+  late final EndUser? user;
   final AuthUtil _auth = AuthUtil();
-  @override
+  Home({this.user});
+
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
@@ -18,6 +23,36 @@ class Home extends StatelessWidget {
               label: Text('logout'),
               onPressed: () async {
                 await _auth.signOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return MyApp();
+                  }),
+                );
+              },
+            ),
+            TextButton.icon(
+              icon: Icon(Icons.plus_one),
+              label: Text('New'),
+              onPressed: () async {
+                // Navigator.pushReplacement(
+                //   context,
+                //   MaterialPageRoute(builder: (context) {
+                //     return NewRecipe(user: user, name: "");
+                //   }),
+                // );
+              },
+            ),
+            TextButton.icon(
+              icon: Icon(Icons.my_library_books),
+              label: Text('my'),
+              onPressed: () async {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return MyRecipe(user: user);
+                  }),
+                );
               },
             ),
           ],
