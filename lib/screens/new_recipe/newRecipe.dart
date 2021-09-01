@@ -299,7 +299,20 @@ class _NewRecipeState extends State<NewRecipe> {
                       SizedBox(height: 20.0),
                       GestureDetector(
                         onTap: () {
-                          uploadImage();
+                          if (recipeName.length == 0) {
+                            if (this.mounted) {
+                              setState(() {
+                                error = "Please write a name first";
+                              });
+                            }
+                          } else {
+                            if (this.mounted) {
+                              setState(() {
+                                error = "";
+                              });
+                            }
+                            uploadImage();
+                          }
                         },
                         child: Container(
                           height: 40.0,
@@ -391,12 +404,12 @@ class _NewRecipeState extends State<NewRecipe> {
                                   setState(() {
                                     error = "Please upload a photo";
                                   });
-                                }
-                              } else {
-                                if (this.mounted) {
-                                  setState(() {
-                                    error = "";
-                                  });
+                                } else {
+                                  if (this.mounted) {
+                                    setState(() {
+                                      error = "";
+                                    });
+                                  }
                                 }
                               }
                               if (_formKey.currentState!.validate() == true) {

@@ -6,7 +6,6 @@ import 'package:tassie/screens/home/home%20copy.dart';
 import 'package:tassie/screens/my_recipe/myRecipe.dart';
 import 'package:tassie/screens/myprofile/myProfile.dart';
 
-
 import '../constants.dart';
 
 class Wrapper extends StatefulWidget {
@@ -33,9 +32,8 @@ class _WrapperState extends State<Wrapper> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final user = Provider.of<EndUser>(context);
     Size size = MediaQuery.of(context).size;
-    
-    if (user.uid != null) {
 
+    if (user.uid != null) {
       return Scaffold(
         //nav
         extendBody: true,
@@ -102,9 +100,9 @@ class _WrapperState extends State<Wrapper> with SingleTickerProviderStateMixin {
 
         body: TabBarView(
           children: [
-            HomeC(user: user),
             MyRecipe(user: user),
             Profile(user: user),
+            HomeC(user: user),
           ],
           controller: _tabController,
         ),

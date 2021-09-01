@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tassie/models/enduser.dart';
 import 'package:tassie/screens/wrapper.dart';
@@ -5,8 +6,7 @@ import 'package:tassie/screens/wrapper.dart';
 class UError extends StatelessWidget {
   final EndUser? user;
   UError({this.user});
-
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,8 @@ class UError extends StatelessWidget {
             Text("OOPSS RAN INTO A PROBLEM..."),
             TextButton(
               onPressed: () async {
-                await Navigator.pushReplacement(
+                await _auth.signOut();
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) {
                     return Wrapper();
