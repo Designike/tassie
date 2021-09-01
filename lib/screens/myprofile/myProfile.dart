@@ -98,20 +98,18 @@ class _ProfileState extends State<Profile> {
                     height: size.height * 0.4,
                     child: Center(
                       child: Image.asset(
-                        'assets/photos/profile.png',
-                        height: size.width * 0.4,
-                        width: size.width * 0.4,
+                        'assets/photos/abstract.png',
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: kPrimaryColorAccent,
-                      boxShadow: [
-                        BoxShadow(
-                          color: kTextBlack[700]!.withOpacity(0.2),
-                          offset: Offset(0.0, 5.0),
-                          blurRadius: 15.0,
-                        ),
-                      ],
+                      color: kPrimaryColorAccent.withOpacity(0.2),
+                      // boxShadow: [
+                      //   BoxShadow(
+                      //     color: kTextBlack[700]!.withOpacity(0.2),
+                      //     offset: Offset(0.0, 5.0),
+                      //     blurRadius: 15.0,
+                      //   ),
+                      // ],
                     ),
                   ),
                 ),
@@ -137,6 +135,9 @@ class _ProfileState extends State<Profile> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
+                          SizedBox(
+                            height: size.height * 0.1,
+                          ),
                           Container(
                             // height: 250.0,
                             padding: EdgeInsets.all(kDefaultPadding),
@@ -262,9 +263,37 @@ class _ProfileState extends State<Profile> {
                               ),
                             ),
                           ),
+                          SizedBox(
+                            height: 50.0,
+                          ),
                         ],
                       ),
                     ),
+                  ),
+                ),
+                Positioned(
+                  bottom: size.height * 0.4,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: size.height * 0.4,
+                    child: Center(
+                      child: Image.asset(
+                        'assets/photos/profile.png',
+                        height: size.width * 0.4,
+                        width: size.width * 0.4,
+                      ),
+                    ),
+                    // decoration: BoxDecoration(
+                    //   color: kPrimaryColorAccent,
+                    //   boxShadow: [
+                    //     BoxShadow(
+                    //       color: kTextBlack[700]!.withOpacity(0.2),
+                    //       offset: Offset(0.0, 5.0),
+                    //       blurRadius: 15.0,
+                    //     ),
+                    //   ],
+                    // ),
                   ),
                 ),
               ],

@@ -120,6 +120,15 @@ class _DescriptionState extends State<Description> {
           )
         : Scaffold(
             backgroundColor: kTextWhite,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.arrow_back),
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
             body: CustomScrollView(
               slivers: [
                 // SliverAppBar(
@@ -327,6 +336,21 @@ class _RecipeAppBar extends SliverPersistentHeaderDelegate {
         ),
       ),
     );
+    final extraPaddingBarDesign = Positioned(
+      bottom: 30,
+      child: Container(
+        height: 200.0,
+        // alignment: Alignment.topCenter,
+        width: size.width,
+        // decoration: BoxDecoration(
+        //   color: kTextWhite,
+        // ),
+        child: Image.asset(
+          'assets/photos/abstract.png',
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
 
     return Container(
       child: Stack(
@@ -340,8 +364,10 @@ class _RecipeAppBar extends SliverPersistentHeaderDelegate {
             card,
             bottomSilverBar,
             extraPaddingBar,
+            extraPaddingBarDesign,
           ] else ...[
             extraPaddingBar,
+            extraPaddingBarDesign,
             bottomSilverBar,
             card,
           ],

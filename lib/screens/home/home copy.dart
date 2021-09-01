@@ -293,10 +293,10 @@ class _HomeCState extends State<HomeC> {
             ),
           )
         : Scaffold(
-            appBar: AppBar(
-              elevation: 0.0,
-              backgroundColor: kPrimaryColor,
-            ),
+            // appBar: AppBar(
+            //   elevation: 0.0,
+            //   backgroundColor: kPrimaryColor,
+            // ),
             //nav
             // extendBody: true,
             // bottomNavigationBar: Container(
@@ -379,16 +379,16 @@ class _HomeCState extends State<HomeC> {
                     // HeaderWithSearchBox(size: size),
                     Container(
                       margin: EdgeInsets.only(bottom: kDefaultPadding * 1.2),
-                      height: size.height * 0.2,
+                      height: size.height * 0.3,
                       child: Stack(
                         children: [
                           Container(
                             padding: EdgeInsets.only(
-                              left: kDefaultPadding,
-                              right: kDefaultPadding,
-                              bottom: 36 + kDefaultPadding,
-                            ),
-                            height: size.height * 0.2 - 25,
+                                left: kDefaultPadding,
+                                right: kDefaultPadding,
+                                // bottom: kDefaultPadding,
+                                top: kDefaultPadding * 2),
+                            height: size.height * 0.3 - 25,
                             decoration: BoxDecoration(
                               color: kPrimaryColor,
                               borderRadius: BorderRadius.only(
@@ -410,7 +410,8 @@ class _HomeCState extends State<HomeC> {
                                       ),
                                 ),
                                 Spacer(),
-                                // Image.asset(''),
+                                // Image.asset('assets/photos/profile.png',
+                                //     height: size.width * 0.2, width: size.width * 0.2,),
                               ],
                             ),
                           ),
