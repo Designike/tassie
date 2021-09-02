@@ -477,7 +477,7 @@ class MyList extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 30.0),
           itemCount: listItems.length,
           shrinkWrap: true,
-          itemExtent: 30,
+          physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             return ListTile(
               leading: MyBullet(),

@@ -207,13 +207,13 @@ class _Myrecipetate extends State<MyRecipe> {
                                   onTap: () async {
                                     await Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return Description(
-                                        mixture: mixture[index],
-                                      );
-                                      // return NewRecipe(
-                                      //     user: user,
-                                      //     name: recipe[index],
-                                      //     recipes: recipe);
+                                      // return Description(
+                                      //   mixture: mixture[index],
+                                      // );
+                                      return NewRecipe(
+                                          user: user,
+                                          name: recipe[index],
+                                          recipes: recipe);
                                     }));
                                   },
                                   child: Container(

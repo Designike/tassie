@@ -299,7 +299,7 @@ class _NewRecipeState extends State<NewRecipe> {
                       SizedBox(height: 20.0),
                       GestureDetector(
                         onTap: () {
-                          if (recipeName.length == 0) {
+                          if (recipeName.length == 0 && name?.length == 0) {
                             if (this.mounted) {
                               setState(() {
                                 error = "Please write a name first";
