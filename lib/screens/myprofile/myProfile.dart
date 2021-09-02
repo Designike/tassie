@@ -148,13 +148,18 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.all(kDefaultPadding),
-                                  child: Text(
-                                    userName.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
+                                Flexible(
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.all(kDefaultPadding),
+                                    child: Text(
+                                      userName.toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      softWrap: false,
                                     ),
                                   ),
                                 ),
@@ -183,13 +188,18 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.all(kDefaultPadding),
-                                  child: Text(
-                                    email!,
-                                    style: TextStyle(
-                                      fontSize: 20.0,
+                                Flexible(
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.all(kDefaultPadding),
+                                    child: Text(
+                                      email!,
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      softWrap: false,
                                     ),
                                   ),
                                 ),
@@ -253,7 +263,7 @@ class _ProfileState extends State<Profile> {
                     height: size.height * 0.4,
                     child: Center(
                       child: Image.asset(
-                        'assets/photos/profile.png',
+                        'assets/photos/prof.png',
                         height: size.width * 0.4,
                         width: size.width * 0.4,
                       ),

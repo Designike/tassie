@@ -203,16 +203,18 @@ class _Myrecipetate extends State<MyRecipe> {
                                     ? NetworkImage(imageUrl[index])
                                     : NetworkImage(
                                         'https://i.imgur.com/sUFH1Aq.png'),
-
                                 child: InkWell(
                                   onTap: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) {
-                                        return Description(
-                                            mixture: mixture[index]);
-                                      }),
-                                    );
+                                    await Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return Description(
+                                        mixture: mixture[index],
+                                      );
+                                      // return NewRecipe(
+                                      //     user: user,
+                                      //     name: recipe[index],
+                                      //     recipes: recipe);
+                                    }));
                                   },
                                   child: Container(
                                     width: size.width - (2 * kDefaultPadding),

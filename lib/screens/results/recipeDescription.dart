@@ -76,7 +76,7 @@ class _DescriptionState extends State<Description> {
 
   Future<void> getImage() async {
     final ref = FirebaseStorage.instance.ref().child('images/$uid/$name');
- 
+
     var url = await ref.getDownloadURL();
     if (this.mounted) {
       setState(() {
@@ -162,7 +162,6 @@ class DescriptionBody extends StatefulWidget {
 }
 
 class _DescriptionBodyState extends State<DescriptionBody> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -264,7 +263,7 @@ class _RecipeAppBar extends SliverPersistentHeaderDelegate {
         height: 200.0,
         width: size.width,
         child: Image.asset(
-          'assets/photos/abstract.png',
+          'assets/photos/abstract3.png',
           fit: BoxFit.cover,
         ),
       ),
@@ -363,7 +362,16 @@ class CoverPhoto extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: kDefaultPadding),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10.0),
-        child: Image.network(imageUrl, fit: BoxFit.cover),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 10.0,
+              color: kTextBlack[600]!,
+            ),
+            // color: kPrimaryColor,),
+          ),
+          child: Image.network(imageUrl, fit: BoxFit.cover),
+        ),
       ),
     );
   }

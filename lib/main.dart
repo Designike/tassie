@@ -9,8 +9,7 @@ import 'constants.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp(
-  ));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -21,6 +20,7 @@ class MyApp extends StatelessWidget {
       value: AuthUtil().user,
       initialData: EndUser(uid: ''),
       child: MaterialApp(
+        title: "Tassie",
         theme: ThemeData(
           fontFamily: "Raleway",
           accentColor: kPrimaryColorAccent,

@@ -59,11 +59,11 @@ class _NewRecipeState extends State<NewRecipe> {
         }
       },
       child: Container(
-        width: 30,
-        height: 30,
+        width: 45,
+        height: 45,
         decoration: BoxDecoration(
           color: (add) ? kPrimaryColor : kTextBlack[800],
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(30),
         ),
         child: Icon(
           (add) ? Icons.add : Icons.remove,
@@ -104,11 +104,11 @@ class _NewRecipeState extends State<NewRecipe> {
         }
       },
       child: Container(
-        width: 30,
-        height: 30,
+        width: 45,
+        height: 45,
         decoration: BoxDecoration(
           color: (add) ? kPrimaryColor : kTextBlack[800],
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(30),
         ),
         child: Icon(
           (add) ? Icons.add : Icons.remove,
@@ -130,12 +130,12 @@ class _NewRecipeState extends State<NewRecipe> {
 
     if (permissionStatus.isGranted) {
       //Select Image
+
       var image = (await _imagePicker.pickImage(
           source: ImageSource.gallery, imageQuality: 25));
-      var file = File(image!.path);
 
-      // ignore: unnecessary_null_comparison
       if (image != null) {
+        var file = File(image.path);
         //Upload to Firebase
         var snapshot = await _firebaseStorage
             .ref()
@@ -348,6 +348,7 @@ class _NewRecipeState extends State<NewRecipe> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextFormField(
+                          initialValue: name,
                           decoration: InputDecoration(
                             labelText: 'Recipe Name',
                             labelStyle: TextStyle(
@@ -510,8 +511,7 @@ class _StepTextFieldState extends State<StepTextField> {
     });
     return TextFormField(
       controller: _stepController,
-      onChanged: (v) =>
-          _NewRecipeState.stepsList[widget.index!] = v.toLowerCase(),
+      onChanged: (v) => _NewRecipeState.stepsList[widget.index!] = v,
       decoration: InputDecoration(
         labelText: 'Add Step',
         labelStyle: TextStyle(
@@ -562,8 +562,7 @@ class _IngredientTextFieldState extends State<IngredientTextField> {
     });
     return TextFormField(
       controller: _ingredientController,
-      onChanged: (v) =>
-          _NewRecipeState.ingredientsList[widget.index!] = v.toLowerCase(),
+      onChanged: (v) => _NewRecipeState.ingredientsList[widget.index!] = v,
       decoration: InputDecoration(
         labelText: 'Add Ingredient',
         labelStyle: TextStyle(
