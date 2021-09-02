@@ -100,9 +100,9 @@ class _WrapperState extends State<Wrapper> with SingleTickerProviderStateMixin {
 
         body: TabBarView(
           children: [
+            HomeC(user: user),
             MyRecipe(user: user),
             Profile(user: user),
-            HomeC(user: user),
           ],
           controller: _tabController,
         ),
