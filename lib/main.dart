@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
       value: AuthUtil().user,
       initialData: EndUser(uid: ''),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: "Tassie",
         theme: ThemeData(
           fontFamily: "Raleway",
